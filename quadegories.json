@@ -1,0 +1,359 @@
+{
+    "quadegories": [
+      {
+        "name": "fried foods",
+        "clues": ["Egg roll", "Savory patty", "Clam cake", "Pommes dauphin"],
+        "funFact": "The <b>clam cake</b> was invented at Aunt Carrie's, an award-winning Rhode Island restaurant, when Aunt Carrie added fresh clams to corn fritters."
+      },
+      {
+        "name": "national parks",
+        "clues": ["Arches", "Crater Lake", "Congaree", "Theodore Roosevelt"],
+        "funFact": "<b>Congaree</b> National Park, located in South Carolina, is home to enormous loblolly pines and several cyprus trees well over five hundred years old."
+      },
+      {
+        "name": "died at the alamo",
+        "clues": ["Davey Crockett", "Jim Bowie", "James Bonham", "Micajah Autry"],
+        "funFact": "<b>James Bonham</b>, at age 29, is believed to have died while manning one of the canons in the interior of the Alamo chapel."
+      },
+      {
+        "name": "dances",
+        "clues": ["Tango", "Pop, Lock, and Drop It", "Batusie", "The Nutbush"],
+        "funFact": "The Batusie was a groovy dance invented for the Batman television series."
+      },
+      {
+        "name": "movies about teachers",
+        "clues": ["To Sir with Love", "Good Bye, Mr. Chips", "Children of a Lesser God", "The Browning Version"],
+        "funFact": "<b>Good Bye, Mr. Chips</b> was once parodied as, 'Piss Off, Mr. Chips'."
+      },
+      {
+        "name": "chess terms",
+        "clues": ["Bishop", "Knight", "Board", "Fork"],
+        "funFact": "Chessmen collected from the Yaktats' people in Alaska bear no resemblance to European chessmen and likely belong to a chess tradition coming from Siberia."
+      },
+      {
+        "name": "types of tobacco",
+        "clues": ["Brightleaf", "Turkish", "Shade Grown", "Wild"],
+        "funFact": "<b>Shade Grown</b> tobacco, also known as Connecticut Shade Grown Tobacco, is grown inside tents to shield it from natural sunlight."
+      },
+      {
+        "name": "monopoly properties",
+        "clues": ["Park Place", "Baltic", "Kentucky", "Atlantic"],
+        "funFact": "The three most landed on properties in the classic Monopoly game are Illinois Street, Go, and B&O Railroad."
+      },
+      {
+        "name": "beans",
+        "clues": ["Garbanzo", "Navy", "Yardlong", "Turtle"],
+        "funFact": "Other beans are Lima, Mung, Moth, and Velvet."
+      },
+      {
+        "name": "lovers of howard hughes",
+        "clues": ["Katherine Hepburn", "Betty Davis", "Yvonne De Carlo", "Linda Darnell"],
+        "funFact": "Howard Hughes once became so obsessed with the 1938 film, <b>Gunga Din</b>, that he had it run on a continuous loop and watched it 150 times."
+      },
+      {
+        "name": "nicknames for grandparents",
+        "clues": ["Pee Paw", "Nonny", "Boppa", "Gumma"],
+        "funFact": "33% of grandparents have been married more than once and 38% have sex at least twice a week."
+      },
+      {
+        "name": "jewish kings",
+        "clues": ["David", "Saul", "Ahab", "Asa"],
+        "funFact": "Other Jewish Kings include Solomon, Aristobulus II, and Herod the Great."
+      },
+      {
+        "name": "volcanos",
+        "clues": ["Krakatoa", "Pelee", "Fuji", "Negra Muerta"],
+        "funFact": "Volcanoes are classified as Active, Dormant, or Extinct."
+      },
+      {
+        "name": "Medical Slang",
+        "clues": ["Stat", "Gas Passer", "Baby Catcher", "Rear Admiral"],
+        "funFact": "The term 'Stat' comes from the Latin word 'Statim,' meaning 'immediately.'"
+    },
+    {
+        "name": "Fictional Horses",
+        "clues": ["Flicka", "Little Blackie", "Khartoum", "Morgenstern"],
+        "funFact": "Flicka is a Swedish word meaning 'little girl,' reflecting the close bond in the story."
+    },
+    {
+        "name": "Television Sergeants",
+        "clues": ["Bilko", "Schultz", "Fish", "Friday"],
+        "funFact": "Sergeant Bilko, from 'The Phil Silvers Show,' was one of TV's first major sitcom hits."
+    },
+    {
+        "name": "Spent Time in Jail",
+        "clues": ["Socrates", "Bill Gates", "Richard Branson", "Mark Wahlberg"],
+        "funFact": "Socrates was sentenced to death for 'corrupting the youth' and promoting unorthodox ideas."
+    },
+    {
+        "name": "Search Engines",
+        "clues": ["AOL", "Alta Vista", "Dogpile", "Snap"],
+        "funFact": "Alta Vista was one of the first web search engines, launched in 1995."
+    },
+    {
+        "name": "Pianists",
+        "clues": ["Horowitz", "Hines", "Joel", "Mays"],
+        "funFact": "Vladimir Horowitz was one of the first classical pianists to perform on live television."
+    },
+    {
+        "name": "Famous Clowns",
+        "clues": ["Bozo", "Clarabelle", "Bubbles", "Doink"],
+        "funFact": "Bozo the Clown became so popular that multiple actors played him simultaneously in different cities."
+    },
+    {
+        "name": "Types of Pickles",
+        "clues": ["Kosher Dill", "Bread and Butter", "Sweet", "Candied"],
+        "funFact": "Kosher dill pickles got their name from traditional Jewish pickle-making methods."
+    },
+    {
+        "name": "Names for Iceland",
+        "clues": ["Saga Island", "Snowland", "Young Woman of the Glacier", "Queen of the Mountain"],
+        "funFact": "Iceland's nickname 'Saga Island' reflects its rich history of Viking sagas."
+    },
+    {
+        "name": "Directed by Frank Capra",
+        "clues": ["Mr. Smith Goes to Washington", "It Happened One Night", "The Younger Generation", "Rendezvous in Space"],
+        "funFact": "'It Happened One Night' was the first film to win all five major Academy Awards."
+    },
+    {
+        "name": "Types of Badgers",
+        "clues": ["Honey", "Calamian Stink", "Eurasian", "Indonesian Stink"],
+        "funFact": "The Honey Badger is famously fearless, taking on predators much larger than itself!"
+    },
+    {
+        "name": "words for kissing",
+        "clues": ["Smooch", "Osculate", "Peck", "Snog"],
+        "funFact": "Osculate is the scientific term for kissing, derived from Latin."
+    },
+    {
+        "name": "Characters in Alice in Wonderland",
+        "clues": ["Dinah", "Dodo", "Bill", "Duck"],
+        "funFact": "The Dodo in Alice in Wonderland is a self-insert by author Lewis Carroll."
+    },
+    {
+        "name": "Parts of an Acorn",
+        "clues": ["Nut", "Cupule", "Fruit Wall", "Remains of Style"],
+        "funFact": "Acorns were once a staple food for many ancient civilizations."
+    },
+    {
+        "name": "Cities in Oregon",
+        "clues": ["Salem", "Klamath", "Florence", "Sweet Home"],
+        "funFact": "Salem, Oregon, is nicknamed the 'Cherry City' for its historical cherry-growing industry."
+    },
+    {
+        "name": "Types of Cactus",
+        "clues": ["Prickly Pear", "Barrel", "Hedgehog", "Cluster of Balls"],
+        "funFact": "The Prickly Pear cactus produces fruit that is both edible and delicious!"
+    },
+    {
+        "name": "Tunnels",
+        "clues": ["Lincoln", "Holland", "Wapping", "Montgomery Bell"],
+        "funFact": "The Lincoln Tunnel connects New York and New Jersey under the Hudson River."
+    },
+    {
+        "name": "Types of Diamonds",
+        "clues": ["Single Cut", "Canary", "Fish-Eye", "Grandfather"],
+        "funFact": "The Canary diamond is famous for its vibrant yellow color caused by nitrogen impurities."
+    },
+    {
+        "name": "Owls",
+        "clues": ["Snowy", "Magellanic Horned", "Screech", "African Grass"],
+        "funFact": "Snowy Owls can survive Arctic winters with their heavily insulated feathers."
+    },
+    {
+        "name": "Ghosts",
+        "clues": ["Caspar", "Jacob Marley", "The Flying Dutchman", "Wizard Clip"],
+        "funFact": "The Flying Dutchman is a legendary ghost ship doomed to sail the seas forever."
+    },
+    {
+        "name": "Types of Bridges",
+        "clues": ["Simple Suspension", "Pontoon", "Covered", "Moon"],
+        "funFact": "Covered bridges were designed to protect their wooden structure from the elements."
+    },
+    {
+        "name": "Brands of Soda Pop",
+        "clues": ["Nehi", "Nesbitt’s", "Dr. Enuf", "Nuky Rose"],
+        "funFact": "Nehi soda was named after the 'knee-high' level of its original bottles."
+    },
+    {
+        "name": "Cars Named After Animals",
+        "clues": ["Bronco", "Skylark", "Pinto", "Cobra"],
+        "funFact": "The Ford Mustang, another animal-named car, is one of the most iconic American muscle cars."
+    },
+    {
+        "name": "Epitaphs",
+        "clues": ["That’s All Folks!", "Ok...I Gotta Go Now", "Jack Lemmon In...", "There Goes the Neighborhood"],
+        "funFact": "Jack Lemmon's epitaph humorously references his film career with 'In...'."
+    },
+    {
+        "name": "Rhodes Scholars",
+        "clues": ["Bill Bradley", "Bill Clinton", "Kris Kristofferson", "Lord Howard Florey"],
+        "funFact": "Rhodes Scholars are selected not just for academics but for leadership potential."
+    },
+    {
+        "name": "Bands Named After Places",
+        "clues": ["The E Street Band", "Boston", "Alabama", "Asia"],
+        "funFact": "Asia’s hit 'Heat of the Moment' topped charts in the 1980s."
+    },
+    {
+        "name": "Presidential Nicknames",
+        "clues": ["Tricky Dick", "His Accidency", "Useless", "Uncle Jumbo"],
+        "funFact": "John Tyler was nicknamed 'His Accidency' because he became president after Harrison’s death."
+    },
+    {
+      "name": "Golf Terms",
+      "clues": ["Par", "Hook", "Bunker", "Apron"],
+      "funFact": "Ironically, \"Golf\" spelled backwards is \"Flog.\""
+  },
+  {
+      "name": "Characters in the novel To Kill a Mockingbird",
+      "clues": ["Atticus", "Dill", "Zeebo", "Link"],
+      "funFact": "Zeebo, son of Finch family housekeeper Calpurnia, works for the town of Maycomb and removes Tim Johnson, the mad dog killed by Atticus."
+  },
+  {
+      "name": "Indian Reservations",
+      "clues": ["Pine Ridge", "Navajo Nation", "Turtle Mountain", "Crow"],
+      "funFact": "In 2000, the poverty rate at Navajo Nation Reservation was 46.5% for families with children, compared to the national average of 9.2%."
+  },
+  {
+      "name": "Nicknames for Margaret",
+      "clues": ["Maggie", "Peg", "Daisy", "Pegeen"],
+      "funFact": "'Pegeen' is the Irish diminutive form of 'Margaret,' derived from Mairead."
+  },
+  {
+      "name": "Types of Pudding",
+      "clues": ["Yorkshire", "Rice", "Banana", "Christmas"],
+      "funFact": "Yorkshire pudding was historically made to stretch meat drippings into a filling side dish."
+  },
+  {
+      "name": "Died while having sex",
+      "clues": ["Nelson Rockefeller", "Attila the Hun", "Pope John XII", "Matthew McConaughey’s father"],
+      "funFact": "Death during consensual sex accounts for approximately 0.6% of all sudden deaths."
+  },
+  {
+      "name": "Battles of WWI",
+      "clues": ["Verdun", "Loos", "Transylvania", "Mullhouse"],
+      "funFact": "The Battle of Loos marked the first time the British used poison gas in combat."
+  },
+  {
+      "name": "Edgar Allan Poe characters",
+      "clues": ["Lenore", "Montresor", "Old Swede", "Newfoundland Dog"],
+      "funFact": "Poe’s father abandoned him and his siblings after their mother’s death, leaving them destitute."
+  },
+  {
+      "name": "Mayors of New York City",
+      "clues": ["Koch", "Beame", "Gaynor", "Willett"],
+      "funFact": "Abraham Beame, at 5'2\", boxed as a flyweight growing up in New York’s Lower East Side."
+  },
+  {
+      "name": "Toothpaste Ingredients",
+      "clues": ["Flouride", "Sodium Laurel Sulfate", "Propylene Glycol", "Triclosan"],
+      "funFact": "Fluoride prevents tooth decay by strengthening enamel and making teeth more resistant to acids."
+  },
+  {
+      "name": "Invented by Women",
+      "clues": ["Disposable Diapers", "Circular Saw", "Liquid Paper", "Windshield Wipers"],
+      "funFact": "Bette Nesmith Graham invented Liquid Paper while working as a typist to fix typing mistakes."
+  },
+  {
+      "name": "Concentration Camps",
+      "clues": ["Auschwitz", "Manzanita", "Andersonville", "Tanauan"],
+      "funFact": "The largest Nazi concentration camp, Auschwitz, held over 1.3 million prisoners."
+  },
+  {
+      "name": "Types of Sugar",
+      "clues": ["Confectioners", "Brown", "Superfine", "Coarse"],
+      "funFact": "Confectioners' sugar is finely ground and often mixed with a small amount of anti-caking agent."
+  },
+  {
+      "name": "Spices",
+      "clues": ["Turmeric", "Safflower", "Catnip", "Sumac"],
+      "funFact": "Turmeric, a bright yellow spice, is often used for its anti-inflammatory properties."
+  },
+  {
+      "name": "Baseball Commissioners",
+      "clues": ["Giamatti", "Landis", "Chandler", "Frick"],
+      "funFact": "Bart Giamatti was Yale University’s president before becoming MLB commissioner."
+  },
+  {
+      "name": "Pornographic Actors",
+      "clues": ["Daniels", "Jeremy", "Drake", "Shea"],
+      "funFact": "Stormy Daniels met Donald Trump at a celebrity golf tournament while promoting adult films."
+  },
+  {
+      "name": "Computer Viruses",
+      "clues": ["Storm Worm", "ILOVEYOU", "Anna Kournikova", "Melissa"],
+      "funFact": "The Melissa virus caused $80 million in damages and overloaded email servers worldwide."
+  },
+  {
+      "name": "Twins",
+      "clues": ["Romulus and Remus", "Luke Skywalker", "Bob Bryan", "Elvis Presley"],
+      "funFact": "Romulus and Remus, mythical founders of Rome, were suckled by a she-wolf."
+  },
+  {
+      "name": "Chemists",
+      "clues": ["Pasteur", "Curie", "Sanger", "Philbin"],
+      "funFact": "Marie Curie was the first woman to win a Nobel Prize, and the only one to win in two sciences."
+  },
+  {
+      "name": "Original Star Trek Characters",
+      "clues": ["Spock", "Chekhov", "Number One", "Ayelbourne"],
+      "funFact": "Mr. Spock’s Vulcan salute is based on a Hebrew priestly blessing."
+  },
+  {
+      "name": "Types of Brick",
+      "clues": ["Jumbo", "Standard Modular", "Norman", "Norwegian"],
+      "funFact": "The oldest known bricks date back to 7000 BC in the Middle East."
+  },
+  {
+      "name": "Characters from the game Clue",
+      "clues": ["Mustard", "Scarlett", "White", "Green"],
+      "funFact": "The character 'Mrs. White' was removed from newer versions of the game Clue."
+  },
+  {
+      "name": "Horse Breeds",
+      "clues": ["Abyssinian", "Irish Draft", "Swedish Warmblood", "Florida Cracker"],
+      "funFact": "The Florida Cracker horse is one of the oldest and rarest horse breeds in the United States."
+  },
+  {
+      "name": "Cones",
+      "clues": ["Pine", "Waffle", "Traffic", "Sugar"],
+      "funFact": "Pine cones are reproductive organs of conifer trees, protecting seeds until maturity."
+  },
+  {
+      "name": "Bridges",
+      "clues": ["George Washington", "London", "Rialto", "Adam’s"],
+      "funFact": "Adam’s Bridge, also known as Rama’s Bridge, connects India to Sri Lanka."
+  },
+  {
+      "name": "Names for the Devil",
+      "clues": ["Mephistopheles", "Mr. Scratch", "Iblis", "Azazel"],
+      "funFact": "'Mephistopheles' originates from German folklore and means 'destroyer of light.'"
+  },
+  {
+      "name": "Owls",
+      "clues": ["Snowy", "Bearded Screech Owl", "Himalayan Wood", "Cuban Pygmy"],
+      "funFact": "The Snowy Owl can survive extreme Arctic winters with its thick feathers."
+  },
+  {
+      "name": "Tennis Players",
+      "clues": ["Monica Seles", "Fred Perry", "Vivian McGrath", "Pat Yeomans"],
+      "funFact": "Monica Seles was stabbed by a fan during a match in 1993."
+  },
+  {
+      "name": "Fish Parts",
+      "clues": ["Dorsal", "Caudal", "Nape", "Buckler"],
+      "funFact": "The dorsal fin helps fish maintain balance and prevents rolling."
+  },
+  {
+      "name": "Deserts",
+      "clues": ["Mojave", "Kalahari", "Sturt Stony", "Thar"],
+      "funFact": "The Mojave Desert is the driest desert in North America."
+  },
+  {
+      "name": "Cameras",
+      "clues": ["Polaroid", "Box", "Pinhole", "Toy"],
+      "funFact": "The Polaroid camera revolutionized photography by enabling instant development."
+  }
+    ]
+  }
