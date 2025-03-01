@@ -48,16 +48,26 @@ const $funFact = $("#funFact");
 const $imStuckPopup = $("#imStuckPopup");
 
 // Track clue state
-var clueState = 0; // 0: initial, 1-4: clues, 5-7: letters
+var clueState = 3; // Starting at state 3 (showing clue 1, ready to reveal first letter)
 var originalBlurredContent = ""; // Store the original content
 
 $(document).ready(function(){
-    $box3.toggleClass("d-flex");
-    $box3.hide();
-    $box2.toggleClass("d-flex");
-    $box2.hide();
-    $box1.toggleClass("d-flex");
-    $box1.hide();
+    // Ensure all boxes have the d-flex class instead of toggling it
+    if (!$box3.hasClass("d-flex")) {
+        $box3.addClass("d-flex");
+    }
+    $box3.show();
+    
+    if (!$box2.hasClass("d-flex")) {
+        $box2.addClass("d-flex");
+    }
+    $box2.show();
+    
+    if (!$box1.hasClass("d-flex")) {
+        $box1.addClass("d-flex");
+    }
+    $box1.show();
+    
     $forwardButton.toggleClass("disabled");
     
     // Set Guess button to purple
@@ -179,7 +189,7 @@ function setGame(n) {
     attempts = 0;
     wordNumber = 4;
     startOfGame = true;
-    clueState = 0;
+    clueState = 3; // Start at clue state 3
     originalBlurredContent = "";
     
     // Set clues
@@ -192,39 +202,39 @@ function setGame(n) {
     // Reset UI
     $blurredAnswer.empty();
     
-    // Hide all boxes except box4
-    if ($box3.is(":visible")) {
-        $box3.hide();
-        if ($box3.hasClass("d-flex")) {
-            $box3.toggleClass("d-flex");
+    // Make sure all clue boxes are visible since we start at clue state 3
+    if (!$box3.is(":visible")) {
+        $box3.show();
+        if (!$box3.hasClass("d-flex")) {
+            $box3.addClass("d-flex");
         }
     }
     
-    if ($box2.is(":visible")) {
-        $box2.hide();
-        if ($box2.hasClass("d-flex")) {
-            $box2.toggleClass("d-flex");
+    if (!$box2.is(":visible")) {
+        $box2.show();
+        if (!$box2.hasClass("d-flex")) {
+            $box2.addClass("d-flex");
         }
     }
     
-    if ($box1.is(":visible")) {
-        $box1.hide();
-        if ($box1.hasClass("d-flex")) {
-            $box1.toggleClass("d-flex");
+    if (!$box1.is(":visible")) {
+        $box1.show();
+        if (!$box1.hasClass("d-flex")) {
+            $box1.addClass("d-flex");
         }
     }
     
     // Reset buttons
     resetClueButton();
     
-    if (!$forwardButton.hasClass("btn-dark")) {
-        $forwardButton.addClass("btn-dark");
+    if (!$forwardButton.hasClass("btn-danger")) {
+        $forwardButton.addClass("btn-danger");
     }
     if ($forwardButton.hasClass("btn-success")) {
         $forwardButton.removeClass("btn-success");
     }
-    if ($forwardButton.hasClass("btn-danger")) {
-        $forwardButton.removeClass("btn-danger");
+    if ($forwardButton.hasClass("btn-dark")) {
+        $forwardButton.removeClass("btn-dark");
     }
     
     $forwardButton.text("I'm Stuck!");
@@ -239,7 +249,7 @@ function setClues(n) {
     // Reset game state
     attempts = 0;
     wordNumber = 4;
-    clueState = 0;
+    clueState = 3; // Start at clue state 3
     originalBlurredContent = "";
     
     // Reset UI
@@ -252,37 +262,42 @@ function setClues(n) {
     // Reset buttons
     resetClueButton();
     
-    if (!$forwardButton.hasClass("btn-dark")) {
-        $forwardButton.addClass("btn-dark");
+    if (!$forwardButton.hasClass("btn-danger")) {
+        $forwardButton.addClass("btn-danger");
     }
     if ($forwardButton.hasClass("btn-success")) {
         $forwardButton.removeClass("btn-success");
     }
-    if ($forwardButton.hasClass("btn-danger")) {
-        $forwardButton.removeClass("btn-danger");
+    if ($forwardButton.hasClass("btn-dark")) {
+        $forwardButton.removeClass("btn-dark");
+    }
+    
+    // Disable the forward button at the start of a new game
+    if (!$forwardButton.hasClass("disabled")) {
+        $forwardButton.addClass("disabled");
     }
     
     $forwardButton.text("I'm Stuck!");
     
-    // Hide all boxes except box4
-    if ($box3.is(":visible")) {
-        $box3.hide();
-        if ($box3.hasClass("d-flex")) {
-            $box3.toggleClass("d-flex");
+    // Make sure all clue boxes are visible since we start at clue state 3
+    if (!$box3.is(":visible")) {
+        $box3.show();
+        if (!$box3.hasClass("d-flex")) {
+            $box3.addClass("d-flex");
         }
     }
     
-    if ($box2.is(":visible")) {
-        $box2.hide();
-        if ($box2.hasClass("d-flex")) {
-            $box2.toggleClass("d-flex");
+    if (!$box2.is(":visible")) {
+        $box2.show();
+        if (!$box2.hasClass("d-flex")) {
+            $box2.addClass("d-flex");
         }
     }
     
-    if ($box1.is(":visible")) {
-        $box1.hide();
-        if ($box1.hasClass("d-flex")) {
-            $box1.toggleClass("d-flex");
+    if (!$box1.is(":visible")) {
+        $box1.show();
+        if (!$box1.hasClass("d-flex")) {
+            $box1.addClass("d-flex");
         }
     }
     
@@ -366,6 +381,9 @@ function checkGuess(userGuess) {
         if ($forwardButton.hasClass("btn-dark")) {
             $forwardButton.removeClass("btn-dark");
         }
+        if ($forwardButton.hasClass("btn-danger")) {
+            $forwardButton.removeClass("btn-danger");
+        }
         if (!$forwardButton.hasClass("btn-success")) {
             $forwardButton.addClass("btn-success");
         }
@@ -434,6 +452,8 @@ function checkGuess(userGuess) {
         }, 50);
         // Reset the answer container to show the blurred answer
         $blurredAnswer.html(originalBlurredContent);
+        // Remove focus from the answer container
+        $blurredAnswer.blur();
     }
 }
 function userStuck(temp, n) {
@@ -522,21 +542,9 @@ function setHints(n, userGuess) {
     }
 }
 
-// New function to update the clue state
+// Function to update the clue state
 function updateClueState() {
     switch(clueState) {
-        case 1: // Show clue 3
-            revealClue(3);
-            updateClueButtonStyle(1);
-            break;
-        case 2: // Show clue 2
-            revealClue(2);
-            updateClueButtonStyle(2);
-            break;
-        case 3: // Show clue 1
-            revealClue(1);
-            updateClueButtonStyle(3);
-            break;
         case 4: // Show first letter
             updateBlurredAnswer(1);
             updateClueButtonStyle(4);
@@ -554,6 +562,12 @@ function updateClueState() {
             if ($forwardButton.hasClass("disabled")) {
                 $forwardButton.removeClass("disabled");
             }
+            if ($forwardButton.hasClass("btn-dark")) {
+                $forwardButton.removeClass("btn-dark");
+            }
+            if (!$forwardButton.hasClass("btn-danger")) {
+                $forwardButton.addClass("btn-danger");
+            }
             break;
         default:
             console.log("Invalid clue state: " + clueState);
@@ -564,7 +578,7 @@ function updateClueState() {
 function revealClue(clueNumber) {
     if (clueNumber === 3) {
         if (!$box3.hasClass("d-flex")) {
-            $box3.toggleClass("d-flex");
+            $box3.addClass("d-flex");
         }
         $box3.show();
         $box3.addClass("reveal-clue");
@@ -573,7 +587,7 @@ function revealClue(clueNumber) {
         }, 600);
     } else if (clueNumber === 2) {
         if (!$box2.hasClass("d-flex")) {
-            $box2.toggleClass("d-flex");
+            $box2.addClass("d-flex");
         }
         $box2.show();
         $box2.addClass("reveal-clue");
@@ -582,7 +596,7 @@ function revealClue(clueNumber) {
         }, 600);
     } else if (clueNumber === 1) {
         if (!$box1.hasClass("d-flex")) {
-            $box1.toggleClass("d-flex");
+            $box1.addClass("d-flex");
         }
         $box1.show();
         $box1.addClass("reveal-clue");
@@ -661,8 +675,10 @@ function updateClueButtonStyle(state) {
 
 // Function to reset the clue button
 function resetClueButton() {
-    $nextClueButton.removeClass("btn-clue-1 btn-clue-2 btn-clue-3 btn-clue-4 btn-clue-5 btn-clue-6 disabled");
+    $nextClueButton.removeClass("btn-clue-4 btn-clue-5 btn-clue-6 disabled");
     $nextClueButton.addClass("btn-success");
+    // Update clue button style to match the current state
+    updateClueButtonStyle(clueState);
 }
 
 // Handle input in the editable container
