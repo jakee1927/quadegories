@@ -1,4 +1,18 @@
 let quadegories = []; // Initialize as empty array
+let temp = -1, n = 0, p = 0, points = 0, counter = 0;
+let startTime = 0, elapsedTime = 0, clueState = 3; // Starting at state 3 (showing all clues)
+let wordGame = null; // Reference to the instance of WordGuessingGame
+let attempts = 0; // Track number of attempts
+let incorrectGuessCount = 0; // Track number of incorrect guesses for hint progression
+let wordNumber = 4;
+let startOfGame = true;
+let numberofWords = 1;
+let originalBlurredContent = ""; // Store the original content
+
+// jQuery elements
+let $feedbackContainer, $feedbackText;
+const $scoreBox = $("#message");
+const $clueBox = [$("#box1 > .hintContainer p"), $("#box2 > .hintContainer p"), $("#box3 > .hintContainer p"), $("#box4 > .hintContainer p")];
 
 fetch('quadegories.json')
   .then(response => {
@@ -21,14 +35,7 @@ fetch('quadegories.json')
     // Display error to user
     alert('Failed to load game data. Please refresh the page and try again.');
   });
-const $clueBox = [$("#box1 > .hintContainer p"), $("#box2 > .hintContainer p"), $("#box3 > .hintContainer p"), $("#box4 > .hintContainer p")];
-var n = 0;
-var i;
-var wordNumber = 4;
-var attempts = 0;
-var startOfGame = true;
-var numberofWords = 1;
-var words = [""];
+
 // jQuery Vars
 const $forwardButton = $("#forwardButton");
 const $nextWordButton = $("#nextWordButton");
@@ -47,11 +54,25 @@ const $box4 = $("#box4");
 const $funFact = $("#funFact");
 const $imStuckPopup = $("#imStuckPopup");
 
-// Track clue state
-var clueState = 3; // Starting at state 3 (showing clue 1, ready to reveal first letter)
-var originalBlurredContent = ""; // Store the original content
-
 $(document).ready(function(){
+    // Initialize feedback container
+    $feedbackContainer = $('<div>').addClass('feedback-container')
+        .css({
+            'position': 'fixed',
+            'bottom': '20px',
+            'left': '50%',
+            'transform': 'translateX(-50%)',
+            'background-color': 'rgba(0, 0, 0, 0.8)',
+            'color': 'white',
+            'padding': '10px 20px',
+            'border-radius': '5px',
+            'z-index': '1000',
+            'display': 'none'
+        })
+        .appendTo('body');
+    
+    $feedbackText = $('<p>').css('margin', '0').appendTo($feedbackContainer);
+
     // Ensure all boxes have the d-flex class instead of toggling it
     if (!$box3.hasClass("d-flex")) {
         $box3.addClass("d-flex");
@@ -73,6 +94,9 @@ $(document).ready(function(){
     // Set Guess button to purple
     $guessButton.removeClass("btn-success").addClass("btn-purple");
     
+    // Hide the original blurred answer box
+    $blurredAnswer.hide();
+    
     // Initialize blurred answer
     updateBlurredAnswer();
     
@@ -84,6 +108,44 @@ $(document).ready(function(){
         $questionMark.removeClass("pulsing-border");
         console.log('Welcome back, returning visitor!');
     }    
+
+    // Reset game state
+    $blurredAnswer.attr("data-placeholder", "Type your answer here...");
+    $blurredAnswer.text("");
+    originalBlurredContent = "";
+    
+    // Enable buttons
+    $nextClueButton.removeClass("disabled");
+    $guessButton.removeClass("disabled");
+    
+    // Reset "I'm Stuck" button
+    $forwardButton.text("I'm Stuck!");
+    $forwardButton.removeClass("btn-success").removeClass("btn-dark").addClass("btn-danger");
+    $forwardButton.addClass("disabled");
+    
+    // Set the clues
+    setClues(n);
+    
+    // Set fun fact
+    $("#funFact p").html(quadegories[n].funFact);
+    
+    // Set the "I'm Stuck" popup content
+    $("#imStuckPopup p").html("The quadegory was <b>" + quadegories[n].name + "</b>!");
+    
+    // Reset the clue button style
+    resetClueButton();
+    
+    // Reset the word number of words
+    numberofWords = quadegories[n].name.split(" ").length;
+    $("#numberOfWordsText").text(numberofWords);
+    if (numberofWords === 1) {
+        $("#sOrNot").text("word");
+    } else {
+        $("#sOrNot").text("words");
+    }
+    
+    // Initialize the word guessing game with the new phrase
+    initWordGuessingGame(quadegories[n].name);
 });
 $(document).on("keydown", function(event){
     if (event.key === "Tab"){
@@ -91,6 +153,11 @@ $(document).on("keydown", function(event){
         if (!$nextClueButton.hasClass("disabled")) {
             clueState++;
             updateClueState();
+        }
+    } else if (event.key === "Enter") {
+        event.preventDefault();
+        if (!$guessButton.hasClass("disabled")) {
+            $guessButton.click();
         }
     }
 });
@@ -150,20 +217,150 @@ $forwardButton.click(function() {
     
     if($forwardButton.text() === "I'm Stuck!"){
         console.log("User Gave up");
-        userStuck(temp, n);
+        
+        // Reset "I'm Stuck" button text
+        $forwardButton.text("Continue");
+        $forwardButton.removeClass("btn-danger").addClass("btn-success");
+        
+        // If we have a word game, reveal all letters
+        if (wordGame) {
+            // Remove all class states from letter boxes first
+            const letterBoxes = document.querySelectorAll('.letter-box');
+            letterBoxes.forEach(box => {
+                box.classList.remove('incorrect', 'correct', 'active');
+                box.classList.add('revealed');
+            });
+            
+            // Fill in all the letters with the correct answer
+            const words = wordGame.words;
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i];
+                for (let j = 0; j < word.length; j++) {
+                    const key = `${i}-${j}`;
+                    const input = wordGame.inputRefs[key];
+                    if (input) {
+                        input.value = word[j];
+                        input.disabled = true;
+                    }
+                }
+            }
+            
+            // Show the fun fact
+            $("#funFactContainer").show();
+            $("#funFact p").html(quadegories[temp].funFact);
+            
+            // Hide other feedback elements
+            $feedbackContainer.hide();
+            
+            // Disable the guess button
+            $guessButton.addClass("disabled");
+        } else {
+            // Use the old flow for legacy support
+            userStuck(temp, n);
+        }
     }
     else if($forwardButton.text() === "Next Quadegory!"){
         console.log("Moving to next quadegory");
         setClues(n);
     }
+    else if($forwardButton.text() === "Continue"){
+        console.log("Continuing to next quadegory");
+        setClues(n);
+        
+        // Reset button appearance
+        $forwardButton.text("I'm Stuck!");
+        $forwardButton.removeClass("btn-success").addClass("btn-danger");
+        $forwardButton.addClass("disabled");
+    }
 });
-$guessButton.click(function(){
-    var userGuess = $blurredAnswer.text().trim();
-    if(userGuess !== "" && userGuess !== "Type your answer here...") {
-        console.log("userGuess: " + userGuess);
-        checkGuess(userGuess);
-    } else {
-        $blurredAnswer.focus();
+$guessButton.click(function() {
+    if (!wordGame) return;
+    
+    // Check if all letter inputs are filled
+    let allFilled = true;
+    let currentGuess = "";
+    let allCorrect = true;
+    let incorrectLetterCount = 0;
+    
+    // Build the current guess and check if all inputs are filled
+    const words = wordGame.words;
+    for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        for (let j = 0; j < word.length; j++) {
+            const key = `${i}-${j}`;
+            const input = wordGame.inputRefs[key];
+            const letterBox = document.querySelector(`.letter-box[data-key="${key}"]`);
+            
+            // Skip revealed letters - they are already correct
+            if (letterBox.classList.contains('revealed')) {
+                currentGuess += input.value;
+                continue;
+            }
+            
+            if (!input.value.trim()) {
+                allFilled = false;
+            } else {
+                currentGuess += input.value;
+                
+                // Check if the letter is correct
+                if (input.value !== word[j]) {
+                    allCorrect = false;
+                    incorrectLetterCount++;
+                    
+                    // Mark the letter as incorrect (but only if it's filled)
+                    if (input.value.trim()) {
+                        letterBox.classList.remove('correct');
+                        letterBox.classList.add('incorrect');
+                    }
+                } else {
+                    // Mark the letter as correct
+                    letterBox.classList.remove('incorrect');
+                    letterBox.classList.add('correct');
+                }
+            }
+        }
+    }
+    
+    // Get the current answer from wordGame
+    const currentAnswer = wordGame.words.flat().join('');
+    
+    // If all inputs are filled and the guess is correct, proceed with success
+    if (allFilled && allCorrect) {
+        wordGame.onComplete();
+        return;
+    }
+    
+    // If all inputs are filled but the guess is wrong
+    if (allFilled && !allCorrect) {
+        // Provide feedback for incorrect guess
+        $feedbackText.text(`Incorrect guess. ${incorrectLetterCount} letter${incorrectLetterCount !== 1 ? 's' : ''} are wrong. Try again or use hints.`);
+        $feedbackContainer.show();
+        setTimeout(() => {
+            $feedbackContainer.hide();
+        }, 3000);
+        
+        // After 3 incorrect guesses, advance the clue state to reveal a letter
+        incorrectGuessCount++;
+        if (incorrectGuessCount >= 3 && clueState < 6) {
+            clueState++;
+            updateClueState();
+            
+            // Reset the counter
+            incorrectGuessCount = 0;
+            
+            $feedbackText.text("A new hint has been revealed!");
+            $feedbackContainer.show();
+            setTimeout(() => {
+                $feedbackContainer.hide();
+            }, 3000);
+        }
+    } else if (!allFilled) {
+        // If not all inputs are filled, prompt the user
+        $feedbackText.text("Please fill in all the letters before guessing.");
+        $feedbackContainer.show();
+        setTimeout(() => {
+            $feedbackContainer.hide();
+        }, 3000);
     }
 });
 $blurredAnswer.on("keydown", function(event){
@@ -182,20 +379,58 @@ $blurredAnswerContainer.on("click", function(){
 function setGame(n) {
     // Reset game state
     attempts = 0;
-    wordNumber = 4;
-    startOfGame = true;
-    clueState = 3; // Start at clue state 3
-    originalBlurredContent = "";
+    clueState = 3;
     
-    // Set clues
-    for (i = 3; i >= 0; i--) {
-        $clueBox[i].text(quadegories[n].clues[i]);
+    // Get the current quadegory data
+    let currentQuadegory = quadegories[n];
+    let quadegoryName = currentQuadegory.name;
+    
+    // Reset UI elements
+    $blurredAnswer.empty();
+    $blurredAnswer.attr("data-placeholder", "Type your answer here...");
+    $blurredAnswer.text("");
+    
+    // Enable buttons
+    $nextClueButton.removeClass("disabled");
+    $guessButton.removeClass("disabled");
+    
+    // Reset "I'm Stuck" button
+    $forwardButton.text("I'm Stuck!");
+    $forwardButton.removeClass("btn-success").removeClass("btn-dark").addClass("btn-danger");
+    $forwardButton.addClass("disabled");
+    
+    // Set the clues
+    setClues(n);
+    
+    // Set fun fact
+    $("#funFact p").html(quadegories[n].funFact);
+    
+    // Set the "I'm Stuck" popup content
+    $("#imStuckPopup p").html("The quadegory was <b>" + quadegoryName + "</b>!");
+    
+    // Reset the clue button style
+    resetClueButton();
+    
+    // Reset the word number of words
+    numberofWords = quadegoryName.split(" ").length;
+    $("#numberOfWordsText").text(numberofWords);
+    if (numberofWords === 1) {
+        $("#sOrNot").text("word");
+    } else {
+        $("#sOrNot").text("words");
     }
     
-    console.log("Setting game with quadegory index: " + n);
+    // Initialize the word guessing game with the new phrase
+    initWordGuessingGame(quadegoryName);
+}
+function setClues(n) {
+    // Reset attempts
+    attempts = 0;
     
-    // Reset UI
-    $blurredAnswer.empty();
+    // Set clues
+    for (let i = 3; i >= 0; i--) {
+        $clueBox[i].text(quadegories[n].clues[i]);
+    }
     
     // Make sure all clue boxes are visible since we start at clue state 3
     if (!$box3.is(":visible")) {
@@ -219,93 +454,19 @@ function setGame(n) {
         }
     }
     
-    // Reset buttons
-    resetClueButton();
-    
-    if (!$forwardButton.hasClass("btn-danger")) {
-        $forwardButton.addClass("btn-danger");
-    }
-    if ($forwardButton.hasClass("btn-success")) {
-        $forwardButton.removeClass("btn-success");
-    }
-    if ($forwardButton.hasClass("btn-dark")) {
-        $forwardButton.removeClass("btn-dark");
-    }
-    
-    $forwardButton.text("I'm Stuck!");
-    
-    // Update blurred answer
-    updateBlurredAnswer();
-    
-    // Set fun fact
-    $("#funFact p").html(quadegories[n].funFact);
-}
-function setClues(n) {
-    // Reset game state
-    attempts = 0;
-    wordNumber = 4;
-    clueState = 3; // Start at clue state 3
-    originalBlurredContent = "";
-    
-    // Reset UI
-    $blurredAnswer.empty();
-    
-    // Reset hint box colors
-    $(".hints").css("background-color", "lightblue");
-    $(".hintContainer").css("color", "black");
-    
-    // Reset buttons
-    resetClueButton();
-    
-    if (!$forwardButton.hasClass("btn-danger")) {
-        $forwardButton.addClass("btn-danger");
-    }
-    if ($forwardButton.hasClass("btn-success")) {
-        $forwardButton.removeClass("btn-success");
-    }
-    if ($forwardButton.hasClass("btn-dark")) {
-        $forwardButton.removeClass("btn-dark");
-    }
-    
-    // Disable the forward button at the start of a new game
+    // Disable the "I'm Stuck" button initially
     if (!$forwardButton.hasClass("disabled")) {
         $forwardButton.addClass("disabled");
     }
     
-    $forwardButton.text("I'm Stuck!");
+    // Reset the clue state to 3 (showing clue 1)
+    clueState = 3;
     
-    // Make sure all clue boxes are visible since we start at clue state 3
-    if (!$box3.is(":visible")) {
-        $box3.show();
-        if (!$box3.hasClass("d-flex")) {
-            $box3.addClass("d-flex");
-        }
-    }
-    
-    if (!$box2.is(":visible")) {
-        $box2.show();
-        if (!$box2.hasClass("d-flex")) {
-            $box2.addClass("d-flex");
-        }
-    }
-    
-    if (!$box1.is(":visible")) {
-        $box1.show();
-        if (!$box1.hasClass("d-flex")) {
-            $box1.addClass("d-flex");
-        }
-    }
-    
-    // Set clues
-    for (i = 3; i >= 0; i--) {
-        $clueBox[i].text(quadegories[n].clues[i]);
-    }
-    
-    // Update blurred answer
+    // Update the blurred answer
     updateBlurredAnswer();
     
-    // Set fun fact
-    $("#funFact p").html(quadegories[n].funFact);
+    // Reinitialize the word guessing game with the current quadegory
+    initWordGuessingGame(quadegories[n].name);
 }
 function revealWord(wordNumber) {
     if (wordNumber < 1 || wordNumber > 4) {
@@ -365,127 +526,115 @@ function revealWord(wordNumber) {
     }
 }
 function checkGuess(userGuess) {
-    userGuess = userGuess.toLowerCase();
-    let correctAnswer = quadegories[n].name.toLowerCase();
+    console.log("Checking guess: " + userGuess);
     
-    if(userGuess === correctAnswer){
-        console.log("Correct!");
-        $forwardButton.text("Next Quadegory!");
+    // If wordGame is active, use the guessButton handler instead
+    if (wordGame) {
+        // Get current guess from wordGame
+        const currentAnswer = quadegories[n].name.toUpperCase();
+        let currentGuess = "";
         
-        // Update button states
-        if ($forwardButton.hasClass("btn-dark")) {
-            $forwardButton.removeClass("btn-dark");
-        }
-        if ($forwardButton.hasClass("btn-danger")) {
-            $forwardButton.removeClass("btn-danger");
-        }
-        if (!$forwardButton.hasClass("btn-success")) {
-            $forwardButton.addClass("btn-success");
-        }
-        
-        // Disable next clue button
-        if (!$nextClueButton.hasClass("disabled")) {
-            $nextClueButton.addClass("disabled");
-        }
-        
-        setTimeout(function(){ // to make sure button loads before background
-            $(".hints").css("background-color", "green"); // change button colors when right
-            $(".hintContainer").css("color", "white");
-            setTimeout(function(){
-                $(".hints").css("background-color", "lightblue");
-                $(".hintContainer").css("color", "black");
-            }, 1200);
-        }, 50);
-        
-        // Show the full answer
-        $blurredAnswer.text(correctAnswer);
-        $blurredAnswer.removeAttr("data-placeholder"); // Remove placeholder when correct
-        originalBlurredContent = "";
-        
-        $funFact.dialog({
-            modal: true,
-            open: function() {
-                let dialogFullyOpened = false;
-                // Delay setting dialog as fully opened to prevent immediate closure
-                setTimeout(function() {
-                    dialogFullyOpened = true;
-                }, 200); // Adjust delay as needed
-        
-                // Close dialog when user clicks outside
-                $('.ui-widget-overlay').bind('click', function() {
-                    $funFact.dialog('close');
-                });
-        
-                // Close dialog when "Enter" key is pressed after dialog is fully open
-                $(document).on('keydown', function(e) {
-                    if (e.key === "Enter" && dialogFullyOpened) {
-                        $funFact.dialog('close');
-                        $(document).off('keydown'); // Unbind to prevent multiple bindings
-                    }
-                });
-            },
-            close: function() {
-                $(document).off('keydown'); // Ensure the event listener is removed on close
-                let temp = n;
-                n = Math.floor(Math.random() * quadegories.length);
-                while (n==temp && quadegories.length > 1){
-                    n = Math.floor(Math.random() * quadegories.length);
-                }
-                setClues(n);
+        // Get the current guess from the wordGame
+        const words = wordGame.words;
+        for (let i = 0; i < words.length; i++) {
+            const word = words[i];
+            let wordGuess = "";
+            
+            for (let j = 0; j < word.length; j++) {
+                const key = `${i}-${j}`;
+                const input = wordGame.inputRefs[key];
+                wordGuess += input.value || "_";
             }
-        });           
-        startOfGame = false;
+            
+            if (i > 0) currentGuess += " ";
+            currentGuess += wordGuess;
+        }
+        
+        // Check if correct
+        if (!currentGuess.includes("_") && currentGuess === currentAnswer) {
+            setHints(n, currentGuess);
+            return true;
+        } else {
+            // Incorrect or incomplete
+            return false;
+        }
     }
-    else {
-        // Make the boxes blink red for wrong answer
-        setTimeout(function(){
-            $(".hints").css("background-color", "red");
-            $(".hintContainer").css("color", "white");
-            setTimeout(function(){
-                $(".hints").css("background-color", "lightblue");
-                $(".hintContainer").css("color", "black");
-            }, 300);
-        }, 50);
-        // Reset the answer container to empty state for placeholder to show
-        $blurredAnswer.empty();
-        // Remove focus from the answer container
-        $blurredAnswer.blur();
+    
+    // Original checkGuess logic for fallback
+    if (userGuess.trim().toLowerCase() === quadegories[n].name.toLowerCase()) {
+        console.log("Correct guess!");
+        setHints(n, userGuess);
+        return true;
+    } else {
+        console.log("Incorrect guess: " + userGuess);
+        attempts++;
+        
+        // After the second attempt, show an additional clue
+        if (attempts >= 2) {
+            clueState++;
+            updateClueState();
+        }
+        
+        return false;
     }
 }
 function userStuck(temp, n) {
-    let clickedOut = false;
-    let correctAnswer = quadegories[temp].name;
+    $forwardButton.addClass("disabled");
+    $nextClueButton.addClass("disabled");
     
-    // Show the full answer in the blurred answer container
-    $blurredAnswer.text(correctAnswer);
-    $blurredAnswer.removeAttr("data-placeholder"); // Remove placeholder when showing answer
-    originalBlurredContent = "";
+    // Display the answer in the blurred container for backup
+    $blurredAnswer.text(quadegories[n].name);
     
-    $imStuckPopup.find('p').html("The quadegory was <b>" + correctAnswer + "</b>!");
+    // Update the word game to show the complete answer
+    if (wordGame) {
+        // Disable all inputs
+        const inputs = document.querySelectorAll('.letter-input');
+        inputs.forEach(input => {
+            input.readOnly = true;
+        });
+        
+        // Reveal all letters
+        const phrase = quadegories[n].name.toUpperCase();
+        const words = phrase.split(' ');
+        
+        for (let i = 0; i < words.length; i++) {
+            const word = words[i];
+            for (let j = 0; j < word.length; j++) {
+                const key = `${i}-${j}`;
+                const letterBox = document.querySelector(`.letter-box[data-key="${key}"]`);
+                const letterDisplay = letterBox?.querySelector('.letter-display');
+                const letterInput = wordGame.inputRefs[key];
+                
+                if (letterDisplay) {
+                    letterDisplay.textContent = word[j];
+                }
+                
+                if (letterInput) {
+                    letterInput.value = word[j];
+                }
+                
+                if (letterBox) {
+                    letterBox.classList.remove('incorrect', 'correct', 'active');
+                    letterBox.classList.add("revealed");
+                }
+            }
+        }
+    }
+    
+    // Show the popup with fun fact
     $imStuckPopup.dialog({
         modal: true,
-        open: function() {
-            // Close dialog when user clicks outside
-            $('.ui-widget-overlay').bind('click', function() {
-                clickedOut = true;
-                $imStuckPopup.dialog('close');
-                console.log("user clicked out of popup");
-            });
-        },
-        close: function(){
-            if (!clickedOut){
-                console.log("Dialog closed normally");
+        width: 400,
+        buttons: {
+            "Next Quadegory": function() {
+                $(this).dialog("close");
+                n = (n + 1) % quadegories.length;
+                setGame(n);
             }
-            setClues(n);
         }
     });
     
-    $(".hints").css("background-color", "red");
-    $(".hintContainer").css("color", "white");
-    setTimeout(function(){
-        $(".hints").css("background-color", "lightblue");
-        $(".hintContainer").css("color", "black");
-    }, 1200);
+    $("#imStuckPopup p").html(quadegories[temp].funFact);
 }
 function getWords(){
     console.log("getting number of words for: " + quadegories[n].name);
@@ -505,38 +654,62 @@ function getWords(){
     }
 }
 function setHints(n, userGuess) {
-    // Only show hints when all clues are revealed and user has made at least one attempt
-    if (wordNumber <= 1 && attempts > 0) {
-        // Get the quadegory name and split it into words
-        let quadegoryName = quadegories[n].name;
-        let quadegorySplitWords = quadegoryName.split(" ");
-        let displayText = "";
-        
-        // For each word in the quadegory
-        for (let i = 0; i < quadegorySplitWords.length; i++) {
-            if (i > 0) {
-                displayText += " "; // Add space between words
-            }
-            
-            let word = quadegorySplitWords[i];
-            let revealedWord = "";
-            
-            // For each character in the word
+    console.log("Setting hints for quadegory: " + quadegories[n].name);
+    
+    // Disable buttons
+    $guessButton.addClass("disabled");
+    $nextClueButton.addClass("disabled");
+    $forwardButton.addClass("disabled");
+    
+    // Mark the word game as complete and correct
+    if (wordGame) {
+        // Mark all letters as correct
+        const words = wordGame.words;
+        for (let i = 0; i < words.length; i++) {
+            const word = words[i];
             for (let j = 0; j < word.length; j++) {
-                // Reveal letters based on number of attempts (up to 3)
-                if (j < Math.min(attempts, 3)) {
-                    revealedWord += word[j]; // Reveal character
-                } else {
-                    revealedWord += "_"; // Keep hidden
+                const key = `${i}-${j}`;
+                const letterBox = document.querySelector(`.letter-box[data-key="${key}"]`);
+                if (letterBox) {
+                    letterBox.classList.remove("incorrect");
+                    letterBox.classList.add("correct");
                 }
             }
-            
-            displayText += revealedWord;
         }
         
-        // Update the display with the progressively revealed quadegory
-        $quadegoryNumberOfWords.html(displayText).css("letter-spacing", ".2rem").effect("highlight");
+        // Disable inputs
+        const inputs = document.querySelectorAll('.letter-input');
+        inputs.forEach(input => {
+            input.readOnly = true;
+        });
     }
+    
+    // Show the answer in the blurred container for backup
+    $blurredAnswer.text(quadegories[n].name);
+    
+    // Show the fun fact popup
+    $funFact.dialog({
+        modal: true,
+        width: 400,
+        buttons: {
+            "Next Quadegory": function() {
+                $(this).dialog("close");
+                n = (n + 1) % quadegories.length;
+                setGame(n);
+            }
+        }
+    });
+    
+    // Set the fun fact content
+    $("#funFact p").html(quadegories[n].funFact);
+    
+    // Visual feedback (flash green)
+    $(".hints").css("background-color", "green");
+    $(".hintContainer").css("color", "white");
+    setTimeout(function(){
+        $(".hints").css("background-color", "lightblue");
+        $(".hintContainer").css("color", "black");
+    }, 1200);
 }
 
 // Function to update the clue state
@@ -568,6 +741,50 @@ function updateClueState() {
             break;
         default:
             console.log("Invalid clue state: " + clueState);
+    }
+    
+    // If word game exists, update its hint level
+    if (wordGame && clueState > 3) {
+        const hintLevel = clueState - 3; // Convert clue state to hint level
+        
+        // Ensure the hint level isn't higher than the maximum allowed
+        if (hintLevel <= 3 && hintLevel > wordGame.hintLevel) {
+            // Apply hints up to the current hint level
+            // We directly set the hint level to ensure correct operation
+            while (wordGame.hintLevel < hintLevel) {
+                wordGame.getNextHint();
+            }
+            
+            // Preserve the correct/incorrect state of user-entered letters
+            preserveLetterStates();
+        }
+    }
+}
+
+// Function to preserve letter states after hint updates
+function preserveLetterStates() {
+    if (!wordGame) return;
+    
+    const words = wordGame.words;
+    for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        for (let j = 0; j < word.length; j++) {
+            const key = `${i}-${j}`;
+            const letterBox = document.querySelector(`.letter-box[data-key="${key}"]`);
+            const input = wordGame.inputRefs[key];
+            
+            // If this letter wasn't revealed by a hint but was entered by the user
+            if (letterBox && !letterBox.classList.contains('revealed') && input.value) {
+                // Check if it's correct or incorrect
+                if (input.value === word[j]) {
+                    letterBox.classList.remove('incorrect');
+                    letterBox.classList.add('correct');
+                } else {
+                    letterBox.classList.remove('correct');
+                    letterBox.classList.add('incorrect');
+                }
+            }
+        }
     }
 }
 
@@ -696,3 +913,106 @@ function resetClueButton() {
 $blurredAnswer.on("input", function(event) {
     // No special handling needed - the CSS handles showing/hiding placeholder
 });
+
+// Initialize the word guessing game with a phrase
+function initWordGuessingGame(phrase) {
+    // Hide the original blurred answer element
+    $blurredAnswer.hide();
+    
+    // Clear any existing word game
+    if (wordGame) {
+        const wordGameContainer = document.querySelector('#wordGuessingGameContainer');
+        if (wordGameContainer) {
+            wordGameContainer.innerHTML = '';
+        }
+    }
+    
+    // Reset game variables
+    clueState = 3; // Start with all clues visible
+    attempts = 0;
+    incorrectGuessCount = 0;
+    
+    // Initialize the WordGuessingGame
+    wordGame = new WordGuessingGame({
+        containerId: 'wordGuessingGameContainer',
+        phrase: phrase.toUpperCase(),
+        onComplete: function() {
+            console.log('Word game completed!');
+            setHints(n, phrase.toUpperCase());
+        }
+    });
+    
+    // Hide the controls container with the redundant buttons
+    $("#wordGuessingGameContainer .controls-container").hide();
+    
+    // Add input event listeners to all letter inputs for auto-win checking
+    setTimeout(() => {
+        const inputs = document.querySelectorAll('.letter-input');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                // Wait a moment for the input to update before checking
+                setTimeout(checkLettersForWin, 50);
+            });
+        });
+    }, 100);
+    
+    // Set initial hint level based on current clue state
+    if (clueState > 3) {
+        const hintLevel = clueState - 3; // Convert clue state to hint level
+        
+        // Apply hints based on current state
+        for (let i = 0; i < hintLevel; i++) {
+            wordGame.getNextHint();
+        }
+    }
+}
+
+// Function to check letters for win condition
+function checkLettersForWin() {
+    if (!wordGame) return;
+    
+    const words = wordGame.words;
+    let allFilled = true;
+    let allCorrect = true;
+    
+    // Check if all letters are filled and correct
+    for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        for (let j = 0; j < word.length; j++) {
+            const key = `${i}-${j}`;
+            const input = wordGame.inputRefs[key];
+            const letterBox = document.querySelector(`.letter-box[data-key="${key}"]`);
+            
+            // Skip letters that are already revealed by hints
+            if (letterBox.classList.contains('revealed')) {
+                continue;
+            }
+            
+            // Check if all inputs are filled
+            if (!input.value.trim()) {
+                allFilled = false;
+                break;
+            }
+            
+            // Check if the input value matches the expected letter
+            if (input.value !== word[j]) {
+                allCorrect = false;
+                
+                // Mark incorrect letters
+                letterBox.classList.remove('correct');
+                letterBox.classList.add('incorrect');
+            } else {
+                // Mark correct letters
+                letterBox.classList.remove('incorrect');
+                letterBox.classList.add('correct');
+            }
+        }
+        
+        if (!allFilled) break;
+    }
+    
+    // If all letters are filled and correct, trigger the win
+    if (allFilled && allCorrect) {
+        wordGame.onComplete();
+    }
+}

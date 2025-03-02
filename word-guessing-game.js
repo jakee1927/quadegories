@@ -364,6 +364,13 @@ class WordGuessingGame {
       const currentWord = this.words[wordIndex];
       const positionKey = `${wordIndex}-${letterIndex}`;
       
+      // Don't modify letters that were revealed by hints
+      if (this.revealedByHint.has(positionKey)) {
+        // If current position is revealed, try to move to next available position
+        this.focusNextInput(wordIndex, letterIndex + 1);
+        return;
+      }
+      
       // Update guessed letter
       this.guessedLetters[positionKey] = upperKey;
       
@@ -372,6 +379,8 @@ class WordGuessingGame {
       
       // Update UI
       this.updateUI();
+      
+      // Check if game is complete
       this.checkCompletion();
     } else if (key === 'Backspace') {
       // Handle backspace
@@ -549,10 +558,18 @@ class WordGuessingGame {
       
       lettersToReveal.forEach(letterIndex => {
         const key = `${wordIndex}-${letterIndex}`;
+        
+        // If the letter is already correctly guessed, don't override it with a hint
+        const existingGuess = this.guessedLetters[key];
+        const actualLetter = word[letterIndex];
+        
+        // Always mark the position as revealed by hint
         this.revealedByHint.add(key);
         
-        // Also update guessed letters to match the revealed letter
-        this.guessedLetters[key] = word[letterIndex];
+        // Update guessed letters only if it's not already correct
+        if (existingGuess !== actualLetter) {
+          this.guessedLetters[key] = actualLetter;
+        }
         
         // Check if this is the current position
         if (wordIndex === currentPosition.wordIndex && letterIndex === currentPosition.letterIndex) {
@@ -563,6 +580,9 @@ class WordGuessingGame {
     
     // Update UI
     this.updateUI();
+    
+    // Check if hints completed the game
+    this.checkCompletion();
     
     // Update hint button text
     const hintButton = document.querySelector(`#${this.containerId} .hint-button`);
@@ -627,9 +647,6 @@ class WordGuessingGame {
         setTimeout(() => this.updateUI(), 10);
       }
     }, 0);
-    
-    // Check if game is complete
-    this.checkCompletion();
   }
   
   /**
@@ -646,15 +663,32 @@ class WordGuessingGame {
     // Update UI
     this.updateUI();
     
-    // Hide completion overlay
-    const completionOverlay = document.querySelector(`#${this.containerId} .completion-overlay`);
+    // Find and hide completion overlay
+    const container = document.getElementById(this.containerId);
+    if (!container) return;
+    
+    const completionOverlay = container.querySelector('.completion-overlay');
     if (completionOverlay) {
       completionOverlay.classList.add('hidden');
       completionOverlay.classList.remove('correct', 'incorrect');
     }
     
+    // Reset completion message elements
+    const completionIcon = container.querySelector('.completion-icon');
+    const completionText = container.querySelector('.completion-text');
+    
+    if (completionIcon) {
+      completionIcon.classList.remove('correct', 'incorrect');
+      completionIcon.textContent = '';
+    }
+    
+    if (completionText) {
+      completionText.classList.remove('correct', 'incorrect');
+      completionText.textContent = '';
+    }
+    
     // Update hint button
-    const hintButton = document.querySelector(`#${this.containerId} .hint-button`);
+    const hintButton = container.querySelector('.hint-button');
     if (hintButton) {
       hintButton.textContent = 'Get Hint (1/3)';
       hintButton.classList.remove('disabled');
@@ -696,7 +730,15 @@ class WordGuessingGame {
         const guessedLetter = this.guessedLetters[key] || '';
         
         // Determine what to display
-        const displayLetter = isRevealed ? letter : guessedLetter;
+        let displayLetter;
+        
+        if (isRevealed) {
+          // If revealed by hint, always show the correct letter
+          displayLetter = letter;
+        } else {
+          // Otherwise show what the user has guessed
+          displayLetter = guessedLetter;
+        }
         
         // Update the display
         letterDisplay.textContent = displayLetter || '_';
@@ -707,6 +749,7 @@ class WordGuessingGame {
         } else if (isRevealed) {
           letterBox.classList.add('revealed');
         } else if (displayLetter) {
+          // Only mark letters as correct/incorrect if they're not revealed by hint
           if (displayLetter === letter) {
             letterBox.classList.add('correct');
           } else {
@@ -734,7 +777,9 @@ class WordGuessingGame {
       const allCorrect = this.words.every((word, wordIndex) =>
         word.split('').every((letter, letterIndex) => {
           const key = `${wordIndex}-${letterIndex}`;
-          return (this.guessedLetters[key] || '') === letter;
+          // For revealed letters, they are always correct
+          // For guessed letters, check if they match the actual letter
+          return this.revealedByHint.has(key) || (this.guessedLetters[key] === letter);
         })
       );
       
@@ -765,14 +810,18 @@ class WordGuessingGame {
     
     if (!completionOverlay || !completionIcon || !completionText) return;
     
+    // First clear any existing classes
+    completionOverlay.classList.remove('hidden', 'correct', 'incorrect');
+    completionIcon.classList.remove('correct', 'incorrect');
+    completionText.classList.remove('correct', 'incorrect');
+    
     // Update classes
-    completionOverlay.classList.remove('hidden');
     completionOverlay.classList.add(isCorrect ? 'correct' : 'incorrect');
-    
     completionIcon.classList.add(isCorrect ? 'correct' : 'incorrect');
-    completionIcon.textContent = isCorrect ? '✓' : '✗';
-    
     completionText.classList.add(isCorrect ? 'correct' : 'incorrect');
+    
+    // Update content
+    completionIcon.textContent = isCorrect ? '✓' : '✗';
     completionText.textContent = isCorrect ? 'Correct!' : 'Not quite right!';
   }
 }
