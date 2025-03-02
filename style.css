@@ -133,7 +133,7 @@ p {
     }
     .hintContainer {
         position: relative;
-        width: 50%;
+        width: 100%;
         height: 50%;
     }
     #howToPlay{
@@ -192,11 +192,30 @@ p {
     min-height: 2rem;
     transition: all 0.3s ease;
     outline: none;
-    caret-color: blueviolet;
+    caret-color: transparent;
 }
 
 #blurredAnswer:focus {
     outline: none;
+}
+
+/* Add placeholder styles for the answer input */
+#blurredAnswer:empty::before {
+    content: attr(data-placeholder);
+    color: black;
+    opacity: 1;
+    pointer-events: none;
+}
+
+/* Animation for letter reveal flash */
+@keyframes letter-reveal-flash {
+    0% { background-color: rgba(138, 43, 226, 0.1); }
+    50% { background-color: rgba(138, 43, 226, 0.3); }
+    100% { background-color: transparent; }
+}
+
+.reveal-letter-flash {
+    animation: letter-reveal-flash 0.6s ease-out;
 }
 
 /* Button color transitions */
@@ -210,13 +229,6 @@ p {
     background-color: #7722c9; /* Slightly darker purple on hover */
     border-color: #7722c9;
     color: white;
-}
-
-.btn-purple:focus, .btn-purple:active {
-    background-color: #6a1fc0; /* Even darker purple when focused/active */
-    border-color: #6a1fc0;
-    color: white;
-    box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25);
 }
 
 .btn-clue-1 {

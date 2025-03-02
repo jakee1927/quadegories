@@ -118,17 +118,12 @@ $blurredAnswer.on("focus", function(){
     }
     firstFocus = true;
     
-    // Store the original content (underscores and revealed letters)
-    if (originalBlurredContent === "") {
-        originalBlurredContent = $(this).html();
-    }
-    
-    // Clear the content when focused
-    $(this).text("");
+    // No need to clear content with placeholder approach
+    // The data-placeholder will be shown when empty
 });
 $blurredAnswer.on("blur", function(){
     if ($(this).text().trim() === "") {
-        $(this).html(originalBlurredContent);
+        $(this).empty(); // Ensure it's empty to show placeholder
     }
 });
 $nextClueButton.click(function(){
@@ -404,6 +399,7 @@ function checkGuess(userGuess) {
         
         // Show the full answer
         $blurredAnswer.text(correctAnswer);
+        $blurredAnswer.removeAttr("data-placeholder"); // Remove placeholder when correct
         originalBlurredContent = "";
         
         $funFact.dialog({
@@ -450,8 +446,8 @@ function checkGuess(userGuess) {
                 $(".hintContainer").css("color", "black");
             }, 300);
         }, 50);
-        // Reset the answer container to show the blurred answer
-        $blurredAnswer.html(originalBlurredContent);
+        // Reset the answer container to empty state for placeholder to show
+        $blurredAnswer.empty();
         // Remove focus from the answer container
         $blurredAnswer.blur();
     }
@@ -462,6 +458,7 @@ function userStuck(temp, n) {
     
     // Show the full answer in the blurred answer container
     $blurredAnswer.text(correctAnswer);
+    $blurredAnswer.removeAttr("data-placeholder"); // Remove placeholder when showing answer
     originalBlurredContent = "";
     
     $imStuckPopup.find('p').html("The quadegory was <b>" + correctAnswer + "</b>!");
@@ -625,24 +622,36 @@ function updateBlurredAnswer(lettersToShow = 0) {
         
         for (let j = 0; j < word.length; j++) {
             if (j < lettersToShow) {
-                // Add a span with animation for newly revealed letters
-                if (j === lettersToShow - 1 && lettersToShow > 0) {
-                    displayText += `<span class="reveal-letter">${word[j]}</span>`;
-                } else {
-                    displayText += word[j];
-                }
+                // No HTML tags in placeholder - just show the letter
+                displayText += word[j];
             } else {
                 displayText += "_";
             }
         }
     }
     
-    $blurredAnswer.html(displayText);
+    // Set the data-placeholder attribute with plain text only
+    $blurredAnswer.attr("data-placeholder", displayText);
     originalBlurredContent = displayText;
+    
+    // Clear the actual content if empty
+    if ($blurredAnswer.text().trim() === "") {
+        $blurredAnswer.empty();
+    }
+    
+    // Add animation by highlighting the container
     $blurredAnswerContainer.addClass("highlight-answer");
     setTimeout(function() {
         $blurredAnswerContainer.removeClass("highlight-answer");
     }, 500);
+    
+    // If we've just revealed a letter, add a brief flash animation to the container
+    if (lettersToShow > 0) {
+        $blurredAnswerContainer.addClass("reveal-letter-flash");
+        setTimeout(function() {
+            $blurredAnswerContainer.removeClass("reveal-letter-flash");
+        }, 500);
+    }
 }
 
 // Function to update the clue button style based on state
@@ -667,6 +676,7 @@ function updateClueButtonStyle(state) {
             break;
         case 6:
             $nextClueButton.addClass("btn-clue-6");
+            $nextClueButton.text("No More Letters!");
             break;
         default:
             $nextClueButton.addClass("btn-success");
@@ -676,6 +686,7 @@ function updateClueButtonStyle(state) {
 // Function to reset the clue button
 function resetClueButton() {
     $nextClueButton.removeClass("btn-clue-4 btn-clue-5 btn-clue-6 disabled");
+    $nextClueButton.text("Reveal a Letter");
     $nextClueButton.addClass("btn-success");
     // Update clue button style to match the current state
     updateClueButtonStyle(clueState);
@@ -683,9 +694,5 @@ function resetClueButton() {
 
 // Handle input in the editable container
 $blurredAnswer.on("input", function(event) {
-    // If the user is typing, make sure we don't show the underscores
-    if ($(this).text().trim() !== "") {
-        // We're in typing mode, so don't show the underscores
-        $(this).removeClass("showing-placeholder");
-    }
+    // No special handling needed - the CSS handles showing/hiding placeholder
 });
