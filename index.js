@@ -963,6 +963,16 @@ function checkEasyModeAnswer(optionIndex) {
         } else {
             // On first wrong attempt, just make the option pop away
             // Animation is handled by CSS
+            
+            // Flash the hint boxes red like in normal mode
+            setTimeout(function(){
+                $(".hints").css("background-color", "red");
+                $(".hintContainer").css("color", "white");
+                setTimeout(function(){
+                    $(".hints").css("background-color", "lightblue");
+                    $(".hintContainer").css("color", "black");
+                }, 300);
+            }, 50);
         }
     }
 }
