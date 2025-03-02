@@ -224,18 +224,8 @@ $forwardButton.click(function() {
         
         // If we have a word game, reveal all letters
         if (wordGame) {
-            // Call the markAsFailed method to properly handle the failure state
-            wordGame.markAsFailed();
-            
-            // Show the fun fact
-            $("#funFactContainer").show();
-            $("#funFact p").html(quadegories[temp].funFact);
-            
-            // Hide other feedback elements
-            $feedbackContainer.hide();
-            
-            // Disable the guess button
-            $guessButton.addClass("disabled");
+            // Use the userStuck function instead of markAsFailed
+            userStuck(temp, n);
         } else {
             // Use the old flow for legacy support
             userStuck(temp, n);
@@ -603,6 +593,20 @@ function userStuck(temp, n) {
         }
     }
     
+    // Make the hint boxes flash red
+    $(".hints").css("background-color", "red");
+    $(".hintContainer").css("color", "white");
+    setTimeout(function(){
+        $(".hints").css("background-color", "lightblue");
+        $(".hintContainer").css("color", "black");
+    }, 1200);
+    
+    // Disable the guess button
+    $guessButton.addClass("disabled");
+    
+    // Hide feedback elements
+    $feedbackContainer.hide();
+    
     // Show the popup with fun fact
     $imStuckPopup.dialog({
         modal: true,
@@ -616,7 +620,7 @@ function userStuck(temp, n) {
         }
     });
     
-    $("#imStuckPopup p").html(quadegories[temp].funFact);
+    $("#imStuckPopup p").html("The quadegory was <b>" + quadegories[temp].name + "</b>!");
 }
 function getWords(){
     console.log("getting number of words for: " + quadegories[n].name);
