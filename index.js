@@ -218,8 +218,11 @@ $forwardButton.click(function() {
         n = Math.floor(Math.random() * quadegories.length);
     }
     
+    // Update currentN to match the new n for "Next Quadegory" functionality
+    currentN = n;
+    
     console.log("[jake] Forward button clicked with text:", $forwardButton.text());
-    console.log("[jake] Current n:", temp, "Next n:", n);
+    console.log("[jake] Current n:", temp, "Next n:", n, "Updated currentN:", currentN);
     
     if($forwardButton.text() === "I'm Stuck!"){
         console.log("[jake] User clicked I'm Stuck");
@@ -240,11 +243,17 @@ $forwardButton.click(function() {
         setGame(n);
     }
     else if($forwardButton.text() === "Continue"){
-        console.log("[jake] Continuing to next quadegory");
+        console.log("[jake] Continue clicked, setting new game");
+        
         // Clean up any existing game state first
         if (wordGame && wordGame.isComplete) {
             wordGame.isComplete = true; // Ensure it's marked as complete
         }
+        
+        // Double-check that currentN and n are synchronized before setting the new game
+        console.log("[jake] Continue: using n:", n, "currentN:", currentN);
+        currentN = n; // Ensure they are synchronized
+        
         setGame(n);
         
         // Reset button appearance
@@ -516,16 +525,20 @@ function checkGuess(userGuess) {
     return false;
 }
 function userStuck(temp, n) {
-    console.log("[jake] User stuck called with temp:", temp, "n:", n);
+    console.log("[jake] User stuck called with temp:", temp, "n:", n, "currentN:", currentN);
     
     // Check if n is valid and quadegories is loaded
-    if (!dataLoaded || !quadegories || !quadegories.length || n === undefined || n < 0 || n >= quadegories.length) {
-        console.error("[jake] userStuck error: quadegories not loaded or invalid n value:", n);
-        return; // Exit early if data isn't available yet or n is invalid
+    if (!dataLoaded || !quadegories || !quadegories.length || temp === undefined || temp < 0 || temp >= quadegories.length) {
+        console.error("[jake] userStuck error: quadegories not loaded or invalid temp value:", temp);
+        return; // Exit early if data isn't available yet or temp is invalid
     }
     
-    const currentQuadegory = quadegories[n];
+    // In userStuck, we should use temp (current quadegory) not n (next quadegory)
+    const currentQuadegory = quadegories[temp];
     console.log("[jake] Current quadegory in userStuck:", currentQuadegory.name);
+    
+    // Verify that temp and n are correct
+    console.log("[jake] Next quadegory will be:", quadegories[n].name);
     
     // Disable buttons
     $forwardButton.addClass("disabled");
@@ -550,7 +563,7 @@ function userStuck(temp, n) {
             input.readOnly = true;
         });
         
-        // Reveal all letters
+        // Reveal all letters - IMPORTANT: use temp (current quadegory), not n (next quadegory)
         const phrase = currentQuadegory.name.toUpperCase();
         console.log("[jake] Revealing answer:", phrase);
         const words = phrase.split(' ');
@@ -605,8 +618,12 @@ function userStuck(temp, n) {
         width: 400,
         buttons: {
             "Next Quadegory": function() {
-                console.log("[jake] Closing stuck popup, starting new game with n:", n);
+                console.log("[jake] Closing stuck popup, starting new game with n:", n, "currentN:", currentN);
                 $(this).dialog("close");
+                
+                // Ensure currentN is synchronized before setting the game
+                currentN = n;
+                console.log("[jake] Starting new quadegory with synchronized values n:", n, "currentN:", currentN);
                 
                 // Important: Use the next quadegory index
                 setGame(n);
