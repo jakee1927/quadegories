@@ -767,6 +767,7 @@ function toggleGameMode() {
         $blurredAnswerContainer.hide();
         $nextClueButton.parent().hide();
         $guessButton.parent().hide();
+        $forwardButton.parent().hide(); // Hide the "I'm Stuck!" button in easy mode
         
         // Show easy mode elements
         $easyModeContainer.show();
@@ -778,6 +779,7 @@ function toggleGameMode() {
         $blurredAnswerContainer.show();
         $nextClueButton.parent().show();
         $guessButton.parent().show();
+        $forwardButton.parent().show(); // Show the "I'm Stuck!" button in normal mode
         
         // Hide easy mode elements
         $easyModeContainer.hide();
