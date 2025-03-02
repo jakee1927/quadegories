@@ -1,6 +1,7 @@
 let quadegories = []; // Initialize as empty array
 let dataLoaded = false; // Flag to track if data has been loaded
 let temp = -1, n = 0, p = 0, points = 0, counter = 0;
+let currentN = 0; // Add a global tracking variable for the current quadegory index
 let startTime = 0, elapsedTime = 0, clueState = 3; // Starting at state 3 (showing all clues)
 let wordGame = null; // Reference to the instance of WordGuessingGame
 let attempts = 0; // Track number of attempts
@@ -31,6 +32,7 @@ fetch('quadegories.json')
     console.log('[jake] The name of the first quadegory is:', quadegories[0].name);
     // Initialize the game with a random quadegory
     n = Math.floor(Math.random() * quadegories.length);
+    currentN = n; // Set currentN to match n
     console.log('[jake] Selected random quadegory index:', n);
     setGame(n);
   })
@@ -363,6 +365,10 @@ function setGame(n) {
         return; // Exit early if data isn't available yet or n is invalid
     }
     
+    // Update the global currentN to match n
+    currentN = n;
+    console.log("[jake] Updated currentN to:", currentN);
+    
     // Reset game state
     attempts = 0;
     clueState = 3;
@@ -614,6 +620,12 @@ function userStuck(temp, n) {
 }
 function setHints(n, userGuess) {
     console.log("[jake] Setting hints for quadegory:", quadegories[n].name, "with index:", n);
+    console.log("[jake] Global currentN:", currentN, "with name:", quadegories[currentN].name);
+    
+    // Verify that n and currentN match (they should at this point)
+    if (n !== currentN) {
+        console.warn("[jake] Warning: n and currentN mismatch in setHints! n:", n, "currentN:", currentN);
+    }
     
     // Disable buttons
     $guessButton.addClass("disabled");
@@ -669,6 +681,9 @@ function setHints(n, userGuess) {
                 // Get a new random quadegory
                 const nextN = Math.floor(Math.random() * quadegories.length);
                 console.log("[jake] Moving to next quadegory:", nextN);
+                // Also update currentN when setting the new game
+                n = nextN;
+                currentN = nextN;
                 setGame(nextN);
             }
         },
@@ -867,9 +882,8 @@ function initWordGuessingGame(phrase) {
         return; // Exit early if phrase is invalid
     }
     
-    // Capture the current value of n for use in onComplete callback
-    const currentN = n;
-    console.log("[jake] Capturing current quadegory index:", currentN, "with name:", 
+    // Use the global currentN instead of capturing n
+    console.log("[jake] Using global currentN:", currentN, "with name:", 
         (quadegories && quadegories[currentN]) ? quadegories[currentN].name : "unknown");
     
     // Hide the original blurred answer element
@@ -904,7 +918,7 @@ function initWordGuessingGame(phrase) {
         phrase: phrase.toUpperCase(),
         onComplete: function() {
             console.log('[jake] Word game completed for:', quadegories[currentN].name);
-            // Use the captured value of n (currentN) to ensure the correct fun fact shows
+            // Use the global currentN to ensure the correct fun fact shows
             setHints(currentN, phrase.toUpperCase());
         }
     });
