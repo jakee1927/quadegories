@@ -51,6 +51,15 @@ const $imStuckPopup = $("#imStuckPopup");
 var clueState = 3; // Starting at state 3 (showing clue 1, ready to reveal first letter)
 var originalBlurredContent = ""; // Store the original content
 
+// Additional variables for easy mode
+const $gameModeToggle = $("#gameModeToggle");
+const $easyModeContainer = $("#easyModeContainer");
+const $easyOptions = $(".easy-option");
+var isEasyMode = false;
+var wrongAttemptsInEasyMode = 0;
+var easyModeOptions = [];
+var correctOptionIndex = -1;
+
 $(document).ready(function(){
     // Ensure all boxes have the d-flex class instead of toggling it
     if (!$box3.hasClass("d-flex")) {
@@ -84,6 +93,28 @@ $(document).ready(function(){
         $questionMark.removeClass("pulsing-border");
         console.log('Welcome back, returning visitor!');
     }    
+    
+    // Set up game mode toggle with localStorage persistence
+    $gameModeToggle.on("change", function() {
+        isEasyMode = $(this).is(":checked");
+        toggleGameMode();
+        
+        // Save preference
+        localStorage.setItem('easyModeEnabled', isEasyMode);
+    });
+    
+    // Set up event handlers for easy mode options
+    $easyOptions.on("click", function() {
+        let optionIndex = $(this).data("index");
+        checkEasyModeAnswer(optionIndex);
+    });
+    
+    // Check for saved mode preference
+    if (localStorage.getItem('easyModeEnabled') === 'true') {
+        isEasyMode = true;
+        $gameModeToggle.prop('checked', true);
+        toggleGameMode();
+    }
 });
 $(document).on("keydown", function(event){
     if (event.key === "Tab"){
@@ -155,6 +186,11 @@ $forwardButton.click(function() {
     else if($forwardButton.text() === "Next Quadegory!"){
         console.log("Moving to next quadegory");
         setClues(n);
+        
+        // If in easy mode, generate new options
+        if (isEasyMode) {
+            generateEasyModeOptions();
+        }
     }
 });
 $guessButton.click(function(){
@@ -239,6 +275,11 @@ function setGame(n) {
     
     // Set fun fact
     $("#funFact p").html(quadegories[n].funFact);
+    
+    // If in easy mode, update the options
+    if (isEasyMode) {
+        generateEasyModeOptions();
+    }
 }
 function setClues(n) {
     // Reset game state
@@ -306,6 +347,11 @@ function setClues(n) {
     
     // Set fun fact
     $("#funFact p").html(quadegories[n].funFact);
+    
+    // If in easy mode, update the options
+    if (isEasyMode) {
+        generateEasyModeOptions();
+    }
 }
 function revealWord(wordNumber) {
     if (wordNumber < 1 || wordNumber > 4) {
@@ -456,10 +502,22 @@ function userStuck(temp, n) {
     let clickedOut = false;
     let correctAnswer = quadegories[temp].name;
     
-    // Show the full answer in the blurred answer container
-    $blurredAnswer.text(correctAnswer);
-    $blurredAnswer.removeAttr("data-placeholder"); // Remove placeholder when showing answer
-    originalBlurredContent = "";
+    // Show the full answer in the blurred answer container if not in easy mode
+    if (!isEasyMode) {
+        $blurredAnswer.text(correctAnswer);
+        $blurredAnswer.removeAttr("data-placeholder"); // Remove placeholder when showing answer
+        originalBlurredContent = "";
+    } else {
+        // In easy mode, highlight the correct answer option
+        $easyOptions.eq(correctOptionIndex).addClass("correct");
+        
+        // Hide other options
+        $easyOptions.each(function(index) {
+            if (index !== correctOptionIndex) {
+                $(this).fadeOut(300);
+            }
+        });
+    }
     
     $imStuckPopup.find('p').html("The quadegory was <b>" + correctAnswer + "</b>!");
     $imStuckPopup.dialog({
@@ -477,6 +535,11 @@ function userStuck(temp, n) {
                 console.log("Dialog closed normally");
             }
             setClues(n);
+            
+            // If in easy mode, generate new options
+            if (isEasyMode) {
+                generateEasyModeOptions();
+            }
         }
     });
     
@@ -696,3 +759,223 @@ function resetClueButton() {
 $blurredAnswer.on("input", function(event) {
     // No special handling needed - the CSS handles showing/hiding placeholder
 });
+
+// Function to toggle between normal and easy mode
+function toggleGameMode() {
+    if (isEasyMode) {
+        // Hide normal mode elements
+        $blurredAnswerContainer.hide();
+        $nextClueButton.parent().hide();
+        $guessButton.parent().hide();
+        
+        // Show easy mode elements
+        $easyModeContainer.show();
+        
+        // Generate multiple choice options
+        generateEasyModeOptions();
+    } else {
+        // Show normal mode elements
+        $blurredAnswerContainer.show();
+        $nextClueButton.parent().show();
+        $guessButton.parent().show();
+        
+        // Hide easy mode elements
+        $easyModeContainer.hide();
+    }
+    
+    // Reset game state for the new mode
+    resetGameForModeSwitch();
+}
+
+// Function to generate multiple choice options for easy mode
+function generateEasyModeOptions() {
+    // Reset wrong attempts counter
+    wrongAttemptsInEasyMode = 0;
+    
+    // Get current quadegory as the correct answer
+    let correctAnswer = quadegories[n].name;
+    
+    // Reset options array
+    easyModeOptions = [];
+    
+    // Add the correct answer
+    easyModeOptions.push(correctAnswer);
+    
+    // Get 3 random wrong answers from other quadegories
+    let availableQuadegories = [...Array(quadegories.length).keys()].filter(index => index !== n);
+    
+    // Shuffle available quadegories to ensure randomness
+    shuffleArray(availableQuadegories);
+    
+    // Take the first 3 (or fewer if we don't have enough)
+    for (let i = 0; i < Math.min(3, availableQuadegories.length); i++) {
+        easyModeOptions.push(quadegories[availableQuadegories[i]].name);
+    }
+    
+    // If we don't have enough quadegories, add dummy options
+    while (easyModeOptions.length < 4) {
+        easyModeOptions.push("Option " + easyModeOptions.length);
+    }
+    
+    // Shuffle the options
+    shuffleArray(easyModeOptions);
+    
+    // Find where the correct answer ended up
+    correctOptionIndex = easyModeOptions.indexOf(correctAnswer);
+    
+    // Set the option button text
+    $easyOptions.each(function(index) {
+        $(this).text(easyModeOptions[index]);
+        $(this).removeClass("correct wrong");
+        $(this).show();
+    });
+}
+
+// Function to check easy mode answer selection
+function checkEasyModeAnswer(optionIndex) {
+    // If this option has already been marked as wrong, do nothing
+    if ($easyOptions.eq(optionIndex).hasClass("wrong")) {
+        return;
+    }
+    
+    if (optionIndex === correctOptionIndex) {
+        // Correct answer selected
+        $easyOptions.eq(optionIndex).addClass("correct");
+        
+        // Flash the hint boxes green like in normal mode
+        setTimeout(function() {
+            $(".hints").css("background-color", "green");
+            $(".hintContainer").css("color", "white");
+            setTimeout(function() {
+                $(".hints").css("background-color", "lightblue");
+                $(".hintContainer").css("color", "black");
+            }, 1200);
+        }, 50);
+        
+        // Update button states like in normal mode
+        $forwardButton.text("Next Quadegory!");
+        
+        if ($forwardButton.hasClass("btn-dark")) {
+            $forwardButton.removeClass("btn-dark");
+        }
+        if ($forwardButton.hasClass("btn-danger")) {
+            $forwardButton.removeClass("btn-danger");
+        }
+        if (!$forwardButton.hasClass("btn-success")) {
+            $forwardButton.addClass("btn-success");
+        }
+        
+        // Show fun fact dialog
+        $funFact.dialog({
+            modal: true,
+            open: function() {
+                let dialogFullyOpened = false;
+                setTimeout(function() {
+                    dialogFullyOpened = true;
+                }, 200);
+        
+                $('.ui-widget-overlay').bind('click', function() {
+                    $funFact.dialog('close');
+                });
+        
+                $(document).on('keydown', function(e) {
+                    if (e.key === "Enter" && dialogFullyOpened) {
+                        $funFact.dialog('close');
+                        $(document).off('keydown');
+                    }
+                });
+            },
+            close: function() {
+                $(document).off('keydown');
+                let temp = n;
+                // Get a new random quadegory like in normal mode
+                n = Math.floor(Math.random() * quadegories.length);
+                while (n === temp && quadegories.length > 1) {
+                    n = Math.floor(Math.random() * quadegories.length);
+                }
+                setClues(n);
+                
+                // Generate new options for easy mode
+                if (isEasyMode) {
+                    generateEasyModeOptions();
+                }
+            }
+        });
+    } else {
+        // Wrong answer selected
+        wrongAttemptsInEasyMode++;
+        
+        // Mark this option as wrong and animate it away
+        $easyOptions.eq(optionIndex).addClass("wrong");
+        
+        if (wrongAttemptsInEasyMode >= 2) {
+            // On second wrong attempt, show the "I'm Stuck" behavior
+            let temp = n;
+            let correctAnswer = quadegories[n].name;
+            
+            // Flash all hint boxes red
+            $(".hints").css("background-color", "red");
+            $(".hintContainer").css("color", "white");
+            setTimeout(function() {
+                $(".hints").css("background-color", "lightblue");
+                $(".hintContainer").css("color", "black");
+            }, 1200);
+            
+            // Show the correct answer in the "I'm Stuck" dialog
+            $imStuckPopup.find('p').html("The quadegory was <b>" + correctAnswer + "</b>!");
+            $imStuckPopup.dialog({
+                modal: true,
+                close: function() {
+                    // Get a new random quadegory
+                    n = Math.floor(Math.random() * quadegories.length);
+                    while (n === temp && quadegories.length > 1) {
+                        n = Math.floor(Math.random() * quadegories.length);
+                    }
+                    setClues(n);
+                    
+                    // Generate new options for easy mode
+                    if (isEasyMode) {
+                        generateEasyModeOptions();
+                    }
+                }
+            });
+        } else {
+            // On first wrong attempt, just make the option pop away
+            // Animation is handled by CSS
+        }
+    }
+}
+
+// Utility function to shuffle an array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// Function to handle resetting game state when switching modes
+function resetGameForModeSwitch() {
+    // Reset game with the current quadegory
+    setClues(n);
+    
+    // Reset clue state (in case we're mid-way through a round)
+    clueState = 3;
+    updateClueButtonStyle(clueState);
+    
+    // Reset buttons
+    resetClueButton();
+    
+    // Reset forward button state
+    $forwardButton.text("I'm Stuck!");
+    if (!$forwardButton.hasClass("btn-danger")) {
+        $forwardButton.addClass("btn-danger");
+    }
+    if ($forwardButton.hasClass("btn-success")) {
+        $forwardButton.removeClass("btn-success");
+    }
+    
+    // Reset wrong attempts counter
+    wrongAttemptsInEasyMode = 0;
+}

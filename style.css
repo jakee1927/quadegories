@@ -436,3 +436,61 @@ h1:hover {
         padding: 0.5rem 1rem;
     }
 }
+
+/* Easy Mode Styles */
+.easy-option {
+    min-height: 60px;
+    font-size: 1.2rem;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.easy-option:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.easy-option.correct {
+    background-color: #28a745;
+    color: white;
+}
+
+.easy-option.wrong {
+    animation: pop-away 0.5s ease-out forwards;
+}
+
+@keyframes pop-away {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.5; }
+    100% { transform: scale(0); opacity: 0; visibility: hidden; }
+}
+
+/* Game Mode Toggle Styling */
+.custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #8a2be2;
+    border-color: #7722c9;
+}
+
+.custom-switch .custom-control-label {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Animation for correct answer highlight */
+@keyframes correct-answer-flash {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); background-color: #28a745; }
+    100% { transform: scale(1); }
+}
+
+.correct-flash {
+    animation: correct-answer-flash 0.6s ease-out;
+}
+
+/* Additional responsive styles for easy mode */
+@media (max-width: 767px) {
+    .easy-option {
+        margin-bottom: 10px;
+    }
+}

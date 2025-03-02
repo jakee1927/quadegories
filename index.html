@@ -47,6 +47,39 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Game Mode Toggle -->
+        <div class="row justify-content-center mb-3">
+            <div class="col-auto">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="gameModeToggle">
+                    <label class="custom-control-label" for="gameModeToggle">Easy Mode</label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Easy Mode Multiple Choice Container (hidden by default) -->
+        <div id="easyModeContainer" class="row justify-content-center mb-3" style="display: none;">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <button type="button" class="btn btn-light w-100 easy-option" data-index="0"></button>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <button type="button" class="btn btn-light w-100 easy-option" data-index="1"></button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <button type="button" class="btn btn-light w-100 easy-option" data-index="2"></button>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <button type="button" class="btn btn-light w-100 easy-option" data-index="3"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row justify-content-center mt-2">
             <div class="col-lg-4 col-md-12 mb-2">
                 <button type="button" class="btn btn-success w-100" id="nextClueButton">Reveal a Letter</button>
@@ -156,6 +189,24 @@
                         <li>After revealing all clues, you'll get to see the first three letters of the answer.</li>
                         <li>The last clue is always the closest to the answer.</li>
                         <li>Playing Quadegories improves your brain's <em>executive function</em>. Which means you're getting smarter!</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row mt-4">
+                <div class="col-auto">
+                    <p><strong>Easy Mode:</strong></p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <p>For a more casual experience, try Easy Mode!</p>
+                    <ul class="tipsandtricks">
+                        <li>Toggle Easy Mode with the switch below the answer box.</li>
+                        <li>Instead of typing, select from four multiple choice options.</li> 
+                        <li>If you select the correct answer, you'll see the fun fact and move to the next question.</li>
+                        <li>If you select a wrong answer, it will disappear.</li>
+                        <li>After two wrong answers, the correct answer will be revealed.</li>
                     </ul>
                 </div>
             </div>
