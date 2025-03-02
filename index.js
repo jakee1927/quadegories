@@ -917,6 +917,9 @@ function initWordGuessingGame(phrase) {
         console.log("[jake] Setting up input listeners");
         const inputs = document.querySelectorAll('.letter-input');
         inputs.forEach(input => {
+            // First remove any existing listeners to avoid duplicates
+            input.removeEventListener('input', checkLettersForWin);
+            // Then add the listener
             input.addEventListener('input', checkLettersForWin);
         });
     }, 100);
@@ -934,8 +937,26 @@ function initWordGuessingGame(phrase) {
 }
 
 // Function to check letters for win condition
-function checkLettersForWin() {
+function checkLettersForWin(event) {
     if (!wordGame || wordGame.isComplete) return;
+    
+    // Get the current input if we have an event
+    if (event && event.target) {
+        const target = event.target;
+        const letterBox = target.closest('.letter-box');
+        if (letterBox) {
+            const key = letterBox.dataset.key;
+            const currentValue = target.value.trim().toUpperCase();
+            
+            if (key) {
+                const [wordIdx, letterIdx] = key.split('-').map(Number);
+                if (wordGame.words[wordIdx] && wordGame.words[wordIdx][letterIdx]) {
+                    const expectedLetter = wordGame.words[wordIdx][letterIdx];
+                    console.log(`[jake] Input updated at ${key}: value='${currentValue}', expected='${expectedLetter}', match=${currentValue === expectedLetter}`);
+                }
+            }
+        }
+    }
     
     // Add a small delay to avoid immediate checking while the user is still typing
     clearTimeout(wordGame.checkTimeout);
@@ -943,6 +964,9 @@ function checkLettersForWin() {
         const words = wordGame.words;
         let allFilled = true;
         let allCorrect = true;
+        let totalLetters = 0;
+        let filledLetters = 0;
+        let correctLetters = 0;
         
         // Check if all letters are filled and correct
         for (let i = 0; i < words.length; i++) {
@@ -951,40 +975,57 @@ function checkLettersForWin() {
                 const key = `${i}-${j}`;
                 const input = wordGame.inputRefs[key];
                 const letterBox = document.querySelector(`.letter-box[data-key="${key}"]`);
+                totalLetters++;
                 
                 // Skip letters that are already revealed by hints
-                if (letterBox.classList.contains('revealed')) {
+                const isRevealed = letterBox && letterBox.classList.contains('revealed');
+                
+                if (isRevealed) {
+                    filledLetters++;
+                    correctLetters++;
                     continue;
                 }
                 
-                // Check if all inputs are filled
-                if (!input.value.trim()) {
+                // Check if input exists and has a value
+                if (!input || !input.value || !input.value.trim()) {
                     allFilled = false;
-                    break;
-                }
-                
-                // Check if the input value matches the expected letter
-                if (input.value.toUpperCase() !== word[j]) {
-                    allCorrect = false;
-                    
-                    // Mark incorrect letters
-                    letterBox.classList.remove('correct');
-                    letterBox.classList.add('incorrect');
                 } else {
-                    // Mark correct letters
-                    letterBox.classList.remove('incorrect');
-                    letterBox.classList.add('correct');
+                    filledLetters++;
+                    
+                    // Check if the input value matches the expected letter
+                    const inputValue = input.value.trim().toUpperCase();
+                    const expectedLetter = word[j];
+                    
+                    if (inputValue === expectedLetter) {
+                        correctLetters++;
+                        // Mark correct letters
+                        if (letterBox) {
+                            letterBox.classList.remove('incorrect');
+                            letterBox.classList.add('correct');
+                        }
+                    } else {
+                        allCorrect = false;
+                        
+                        // Mark incorrect letters
+                        if (letterBox) {
+                            letterBox.classList.remove('correct');
+                            letterBox.classList.add('incorrect');
+                        }
+                    }
                 }
             }
-            
-            if (!allFilled) break;
         }
+        
+        console.log(`[jake] Check results - Total: ${totalLetters}, Filled: ${filledLetters}, Correct: ${correctLetters}`);
+        console.log("[jake] Check letters result - allFilled:", allFilled, "allCorrect:", allCorrect);
         
         // If all letters are filled and correct, trigger the win
         if (allFilled && allCorrect && !wordGame.isComplete) {
             console.log("[jake] Win condition detected! All letters correct");
             wordGame.isComplete = true; // Prevent multiple win triggers
             wordGame.onComplete();
+        } else if (allFilled && !allCorrect) {
+            console.log("[jake] All letters filled but some are incorrect");
         }
-    }, 100); // Small delay to avoid checking too frequently
+    }, 200); // Small delay to avoid checking too frequently
 }

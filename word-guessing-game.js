@@ -790,6 +790,9 @@ class WordGuessingGame {
    * Check if the game is complete
    */
   checkCompletion() {
+    // Add debugging
+    console.log('[jake] WordGuessingGame.checkCompletion called');
+    
     // Check if all letters are filled
     const allLettersFilled = this.words.every((word, wordIndex) =>
       word.split('').every((letter, letterIndex) => {
@@ -798,26 +801,50 @@ class WordGuessingGame {
       })
     );
     
+    console.log('[jake] allLettersFilled:', allLettersFilled);
+    
     if (allLettersFilled && !this.isComplete) {
       // Check if all letters are correct
-      const allCorrect = this.words.every((word, wordIndex) =>
-        word.split('').every((letter, letterIndex) => {
+      let allCorrect = true;
+      
+      // More verbose loop for debugging
+      for (let wordIndex = 0; wordIndex < this.words.length; wordIndex++) {
+        const word = this.words[wordIndex];
+        
+        for (let letterIndex = 0; letterIndex < word.length; letterIndex++) {
+          const letter = word[letterIndex];
           const key = `${wordIndex}-${letterIndex}`;
+          
           // For revealed letters, they are always correct
           // For guessed letters, check if they match the actual letter
-          return this.revealedByHint.has(key) || (this.guessedLetters[key] === letter);
-        })
-      );
+          const isRevealed = this.revealedByHint.has(key);
+          const guessedLetter = this.guessedLetters[key];
+          const isCorrect = isRevealed || (guessedLetter === letter);
+          
+          console.log(`[jake] Letter at ${key}: expected='${letter}', guessed='${guessedLetter}', revealed=${isRevealed}, correct=${isCorrect}`);
+          
+          if (!isCorrect) {
+            allCorrect = false;
+            // Continue checking other letters for logging purposes
+          }
+        }
+      }
       
-      this.isCorrect = allCorrect;
-      this.isComplete = true;
+      console.log('[jake] allCorrect:', allCorrect);
       
-      // Show completion message
-      this.showCompletionMessage(allCorrect);
-      
-      // Call the onComplete callback
-      if (typeof this.onComplete === 'function') {
-        this.onComplete(allCorrect);
+      // Only set isComplete and call completion handler if all letters are actually correct
+      if (allCorrect) {
+        this.isCorrect = true;
+        this.isComplete = true;
+        
+        // Show completion message
+        this.showCompletionMessage(true);
+        
+        // Call the onComplete callback
+        if (typeof this.onComplete === 'function') {
+          console.log('[jake] Calling onComplete because all letters are correct');
+          this.onComplete(true);
+        }
       }
     }
   }
