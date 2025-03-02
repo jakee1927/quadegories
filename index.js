@@ -925,7 +925,28 @@ function checkEasyModeAnswer(optionIndex) {
             $imStuckPopup.find('p').html("The quadegory was <b>" + correctAnswer + "</b>!");
             $imStuckPopup.dialog({
                 modal: true,
+                open: function() {
+                    let dialogFullyOpened = false;
+                    setTimeout(function() {
+                        dialogFullyOpened = true;
+                    }, 200);
+                    
+                    // Close dialog when user clicks outside
+                    $('.ui-widget-overlay').bind('click', function() {
+                        $imStuckPopup.dialog('close');
+                    });
+                    
+                    // Close dialog when "Enter" key is pressed after dialog is fully open
+                    $(document).on('keydown', function(e) {
+                        if (e.key === "Enter" && dialogFullyOpened) {
+                            $imStuckPopup.dialog('close');
+                            $(document).off('keydown');
+                        }
+                    });
+                },
                 close: function() {
+                    $(document).off('keydown'); // Ensure event listener is removed
+                    
                     // Get a new random quadegory
                     n = Math.floor(Math.random() * quadegories.length);
                     while (n === temp && quadegories.length > 1) {
