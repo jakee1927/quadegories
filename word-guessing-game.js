@@ -39,6 +39,8 @@ class WordGuessingGame {
     if (!container) {
       console.error(`Container with ID "${this.containerId}" not found`);
       return;
+    } else if (container) {
+      container.focus();
     }
     
     // Clear the container
