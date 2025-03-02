@@ -205,24 +205,12 @@ $nextClueButton.click(function(){
         updateClueState();
     }
 });
-$forwardButton.click(function() {
-    // If button is disabled, do nothing
+$forwardButton.on("click", function(){
     if($forwardButton.hasClass("disabled")) {
         return;
     }
     
-    let temp = n;
-    // Get a new random quadegory that's different from the current one
-    n = Math.floor(Math.random() * quadegories.length);
-    while (n == temp && quadegories.length > 1){
-        n = Math.floor(Math.random() * quadegories.length);
-    }
-    
-    // Update currentN to match the new n for "Next Quadegory" functionality
-    currentN = n;
-    
     console.log("[jake] Forward button clicked with text:", $forwardButton.text());
-    console.log("[jake] Current n:", temp, "Next n:", n, "Updated currentN:", currentN);
     
     if($forwardButton.text() === "I'm Stuck!"){
         console.log("[jake] User clicked I'm Stuck");
@@ -231,8 +219,9 @@ $forwardButton.click(function() {
         $forwardButton.text("Continue");
         $forwardButton.removeClass("btn-danger").addClass("btn-success");
         
-        // Use the userStuck function to reveal the answer - important to pass temp as the current quadegory
-        userStuck(temp, n);
+        // Use the userStuck function to reveal the answer
+        // We'll generate the next random index inside userStuck
+        userStuck();
     }
     else if($forwardButton.text() === "Next Quadegory!"){
         console.log("[jake] Moving to next quadegory");
@@ -524,8 +513,8 @@ function checkGuess(userGuess) {
     // Fallback for non-wordGame approach
     return false;
 }
-function userStuck(temp, n) {
-    console.log("[jake] User stuck called with temp:", temp, "n:", n, "currentN:", currentN);
+function userStuck() {
+    console.log("[jake] User stuck called with currentN:", currentN);
     
     // Check if currentN is valid and quadegories is loaded
     if (!dataLoaded || !quadegories || !quadegories.length || currentN === undefined || currentN < 0 || currentN >= quadegories.length) {
@@ -533,12 +522,9 @@ function userStuck(temp, n) {
         return; // Exit early if data isn't available yet or currentN is invalid
     }
     
-    // Use currentN to get the actual current quadegory being displayed
+    // Use currentN to get the current quadegory being displayed
     const currentQuadegory = quadegories[currentN];
     console.log("[jake] Current quadegory in userStuck:", currentQuadegory.name);
-    
-    // Verify that currentN and n are correct
-    console.log("[jake] Next quadegory will be:", quadegories[n].name);
     
     // Disable buttons
     $forwardButton.addClass("disabled");
@@ -563,7 +549,7 @@ function userStuck(temp, n) {
             input.readOnly = true;
         });
         
-        // Reveal all letters - IMPORTANT: use currentN (current quadegory), not n (next quadegory)
+        // Reveal all letters - IMPORTANT: use currentN (current quadegory)
         const phrase = currentQuadegory.name.toUpperCase();
         console.log("[jake] Revealing answer:", phrase);
         const words = phrase.split(' ');
@@ -612,21 +598,32 @@ function userStuck(temp, n) {
         $imStuckPopup.dialog("close");
     }
     
-    // Show the popup with fun fact - IMPORTANT: Use currentN here, not n or temp
+    // Show the popup with fun fact using the current quadegory
     $imStuckPopup.dialog({
         modal: true,
         width: 400,
         buttons: {
             "Next Quadegory": function() {
-                console.log("[jake] Closing stuck popup, starting new game with n:", n, "currentN:", currentN);
                 $(this).dialog("close");
                 
-                // Ensure currentN is synchronized before setting the game
-                currentN = n;
-                console.log("[jake] Starting new quadegory with synchronized values n:", n, "currentN:", currentN);
+                // Only now generate the next random index
+                let temp = currentN;
+                // Get a new random quadegory that's different from the current one
+                let nextN = Math.floor(Math.random() * quadegories.length);
+                while (nextN == temp && quadegories.length > 1){
+                    nextN = Math.floor(Math.random() * quadegories.length);
+                }
                 
-                // Important: Use the next quadegory index
-                setGame(n);
+                console.log("[jake] Generated new random index. Current:", temp, "Next:", nextN);
+                
+                // Update currentN and n to the new index
+                currentN = nextN;
+                n = nextN;
+                
+                console.log("[jake] Starting new quadegory with index:", nextN);
+                
+                // Start the new game with the next quadegory
+                setGame(nextN);
             }
         },
         // Ensure dialog is properly destroyed when closed
