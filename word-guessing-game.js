@@ -92,7 +92,7 @@ class WordGuessingGame {
     
     // Create the completion overlay (hidden initially)
     const completionOverlay = document.createElement('div');
-    completionOverlay.className = 'completion-overlay hidden';
+    completionOverlay.className = 'completion-overlay word-game-overlay hidden';
     completionOverlay.innerHTML = `
       <div class="completion-message">
         <div class="completion-icon"></div>
@@ -151,6 +151,12 @@ class WordGuessingGame {
           transition: all 0.3s ease;
         }
         
+        .word-guessing-game-area.failed {
+          border-color: #f56565;
+          background-color: rgba(254, 215, 215, 0.3);
+          transition: all 0.3s ease;
+        }
+        
         .words-container {
           display: flex;
           flex-wrap: wrap;
@@ -196,6 +202,24 @@ class WordGuessingGame {
         .letter-box.incorrect {
           border-color: #f56565;
           background-color: #fed7d7;
+        }
+        
+        .letter-box.failed {
+          border-color: #e53e3e;
+          background-color: #fed7d7;
+          animation: flashRed 0.8s ease;
+        }
+        
+        @keyframes flashRed {
+          0%, 100% {
+            border-color: #e53e3e;
+            background-color: #fed7d7;
+          }
+          50% {
+            border-color: #f56565;
+            background-color: #fff5f5;
+            transform: scale(1.05);
+          }
         }
         
         .letter-input {
@@ -823,14 +847,110 @@ class WordGuessingGame {
     // Update content
     completionIcon.textContent = isCorrect ? '✓' : '✗';
     completionText.textContent = isCorrect ? 'Correct!' : 'Not quite right!';
+    
+    // Ensure the overlay is visible
+    completionOverlay.classList.remove('hidden');
+  }
+
+  /**
+   * Mark the game as failed (for "I'm stuck" button)
+   * Displays the correct answer, shows failure state, and calls onComplete callback
+   */
+  markAsFailed() {
+    if (this.isComplete) return; // Don't do anything if already complete
+    
+    // First, clear any user input that's incorrect
+    this.words.forEach((word, wordIndex) => {
+      word.split('').forEach((letter, letterIndex) => {
+        const key = `${wordIndex}-${letterIndex}`;
+        // If letter is incorrect or not filled, mark for replacement
+        if (this.guessedLetters[key] !== letter) {
+          // Save original letter if we have one (for flashing effect)
+          if (this.guessedLetters[key]) {
+            this.guessedLetters[`original-${key}`] = this.guessedLetters[key];
+          }
+          // Clear the incorrect letter
+          delete this.guessedLetters[key];
+        }
+      });
+    });
+    
+    // Flash hint containers red
+    const container = document.getElementById(this.containerId);
+    if (container) {
+      // Add flashing effect to all letter boxes
+      const letterBoxes = container.querySelectorAll('.letter-box');
+      letterBoxes.forEach(box => {
+        box.classList.add('failed');
+        
+        // Remove the failed class after animation
+        setTimeout(() => {
+          box.classList.remove('failed');
+        }, 800);
+      });
+      
+      // Also flash the entire game area
+      const gameArea = container.querySelector('.word-guessing-game-area');
+      if (gameArea) {
+        gameArea.classList.add('failed');
+        setTimeout(() => {
+          gameArea.classList.remove('failed');
+        }, 800);
+      }
+    }
+    
+    // After a short delay, fill in the correct answers
+    setTimeout(() => {
+      // Fill in all letters with the correct answer
+      this.words.forEach((word, wordIndex) => {
+        word.split('').forEach((letter, letterIndex) => {
+          const key = `${wordIndex}-${letterIndex}`;
+          this.guessedLetters[key] = letter;
+          // Also mark all letters as revealed to ensure they show correctly
+          this.revealedByHint.add(key);
+        });
+      });
+      
+      // Set game as complete with failure state
+      this.isCorrect = false;
+      this.isComplete = true;
+      
+      // Update UI with correct answers
+      this.updateUI();
+      
+      // Show failure message
+      this.showCompletionMessage(false);
+      
+      // Update hint button
+      const hintButton = container.querySelector('.hint-button');
+      if (hintButton) {
+        hintButton.textContent = 'No More Hints';
+        hintButton.classList.add('disabled');
+      }
+      
+      // Call the onComplete callback with failed status
+      if (typeof this.onComplete === 'function') {
+        this.onComplete(false);
+      }
+    }, 1000); // Wait for flash effect to complete
   }
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
   // Check if the container exists
-  if (!document.getElementById('wordGuessingGameContainer')) {
+  const container = document.getElementById('wordGuessingGameContainer');
+  if (!container) {
     console.warn('Word guessing game container not found. Create a div with id="wordGuessingGameContainer" to initialize the game.');
+  } else {
+    // Automatically initialize the game with a default phrase
+    new WordGuessingGame({
+      containerId: 'wordGuessingGameContainer',
+      phrase: 'THE QUICK BROWN FOX',
+      onComplete: function(isCorrect) {
+        console.log('Game completed, result:', isCorrect ? 'Correct' : 'Incorrect');
+      }
+    });
   }
 });
 

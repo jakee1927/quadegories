@@ -224,26 +224,8 @@ $forwardButton.click(function() {
         
         // If we have a word game, reveal all letters
         if (wordGame) {
-            // Remove all class states from letter boxes first
-            const letterBoxes = document.querySelectorAll('.letter-box');
-            letterBoxes.forEach(box => {
-                box.classList.remove('incorrect', 'correct', 'active');
-                box.classList.add('revealed');
-            });
-            
-            // Fill in all the letters with the correct answer
-            const words = wordGame.words;
-            for (let i = 0; i < words.length; i++) {
-                const word = words[i];
-                for (let j = 0; j < word.length; j++) {
-                    const key = `${i}-${j}`;
-                    const input = wordGame.inputRefs[key];
-                    if (input) {
-                        input.value = word[j];
-                        input.disabled = true;
-                    }
-                }
-            }
+            // Call the markAsFailed method to properly handle the failure state
+            wordGame.markAsFailed();
             
             // Show the fun fact
             $("#funFactContainer").show();
