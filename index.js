@@ -527,17 +527,17 @@ function checkGuess(userGuess) {
 function userStuck(temp, n) {
     console.log("[jake] User stuck called with temp:", temp, "n:", n, "currentN:", currentN);
     
-    // Check if n is valid and quadegories is loaded
-    if (!dataLoaded || !quadegories || !quadegories.length || temp === undefined || temp < 0 || temp >= quadegories.length) {
-        console.error("[jake] userStuck error: quadegories not loaded or invalid temp value:", temp);
-        return; // Exit early if data isn't available yet or temp is invalid
+    // Check if currentN is valid and quadegories is loaded
+    if (!dataLoaded || !quadegories || !quadegories.length || currentN === undefined || currentN < 0 || currentN >= quadegories.length) {
+        console.error("[jake] userStuck error: quadegories not loaded or invalid currentN value:", currentN);
+        return; // Exit early if data isn't available yet or currentN is invalid
     }
     
-    // In userStuck, we should use temp (current quadegory) not n (next quadegory)
-    const currentQuadegory = quadegories[temp];
+    // Use currentN to get the actual current quadegory being displayed
+    const currentQuadegory = quadegories[currentN];
     console.log("[jake] Current quadegory in userStuck:", currentQuadegory.name);
     
-    // Verify that temp and n are correct
+    // Verify that currentN and n are correct
     console.log("[jake] Next quadegory will be:", quadegories[n].name);
     
     // Disable buttons
@@ -563,7 +563,7 @@ function userStuck(temp, n) {
             input.readOnly = true;
         });
         
-        // Reveal all letters - IMPORTANT: use temp (current quadegory), not n (next quadegory)
+        // Reveal all letters - IMPORTANT: use currentN (current quadegory), not n (next quadegory)
         const phrase = currentQuadegory.name.toUpperCase();
         console.log("[jake] Revealing answer:", phrase);
         const words = phrase.split(' ');
@@ -612,7 +612,7 @@ function userStuck(temp, n) {
         $imStuckPopup.dialog("close");
     }
     
-    // Show the popup with fun fact - IMPORTANT: Use temp here, not n
+    // Show the popup with fun fact - IMPORTANT: Use currentN here, not n or temp
     $imStuckPopup.dialog({
         modal: true,
         width: 400,
