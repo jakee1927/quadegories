@@ -354,6 +354,256 @@
       "name": "Cameras",
       "clues": ["Polaroid", "Box", "Pinhole", "Toy"],
       "funFact": "The Polaroid camera revolutionized photography by enabling instant development."
+  },
+  {
+    "name": "Famous Paintings",
+    "clues": ["Mona Lisa", "Starry Night", "The Scream", "Guernica"],
+    "funFact": "Mona Lisa's enigmatic smile has intrigued art enthusiasts for centuries."
+  },
+  {
+    "name": "World Capitals",
+    "clues": ["Paris", "Tokyo", "Ottawa", "Canberra"],
+    "funFact": "Each capital city has a unique cultural and historical significance."
+  },
+  {
+    "name": "Types of Pasta",
+    "clues": ["Spaghetti", "Penne", "Fusilli", "Linguine"],
+    "funFact": "There are over 600 different pasta varieties enjoyed worldwide."
+  },
+  {
+    "name": "Types of Sushi",
+    "clues": ["Nigiri", "Maki", "Sashimi", "Temaki"],
+    "funFact": "Sushi evolved from ancient Japanese preservation methods."
+  },
+  {
+    "name": "Legendary Creatures",
+    "clues": ["Phoenix", "Dragon", "Unicorn", "Kraken"],
+    "funFact": "Myths of legendary creatures appear in folklore from cultures around the world."
+  },
+  {
+    "name": "Historical Empires",
+    "clues": ["Roman", "Ottoman", "Mongol", "Persian"],
+    "funFact": "These empires reshaped borders, cultures, and governance for centuries."
+  },
+  {
+    "name": "Programming Languages",
+    "clues": ["Python", "JavaScript", "C++", "Ruby"],
+    "funFact": "Each language offers its own syntax and style, powering countless applications."
+  },
+  {
+    "name": "Sports Using a Ball",
+    "clues": ["Soccer", "Basketball", "Tennis", "Cricket"],
+    "funFact": "Ball sports are among the most popular games played around the globe."
+  },
+  {
+    "name": "Notable Explorers",
+    "clues": ["Magellan", "Columbus", "Marco Polo", "Lewis"],
+    "funFact": "Explorers ventured into unknown territories, reshaping our understanding of the world."
+  },
+  {
+    "name": "Mountain Peaks Over 14,000 ft",
+    "clues": ["Denali", "K2", "Aconcagua", "Elbrus"],
+    "funFact": "These towering peaks present some of the most challenging climbs on Earth."
+  },
+  {
+    "name": "Types of Coffee",
+    "clues": ["Espresso", "Latte", "Cappuccino", "Americano"],
+    "funFact": "Coffee has fueled innovation and conversation for centuries across cultures."
+  },
+  {
+    "name": "Varieties of Tea",
+    "clues": ["Green", "Black", "Oolong", "Herbal"],
+    "funFact": "Tea is the world’s second most-consumed beverage, rich in tradition and flavor."
+  },
+  {
+    "name": "Great Inventions",
+    "clues": ["Telephone", "Lightbulb", "Wheel", "Printing Press"],
+    "funFact": "Innovations like these have revolutionized human communication and daily life."
+  },
+  {
+    "name": "Popular Board Games",
+    "clues": ["Catan", "Risk", "Scrabble", "Ticket to Ride"],
+    "funFact": "Board games not only entertain but often reflect cultural and historical trends."
+  },
+  {
+    "name": "Types of Trees",
+    "clues": ["Oak", "Maple", "Pine", "Birch"],
+    "funFact": "Trees are essential to our ecosystem, providing oxygen and shelter."
+  },
+  {
+    "name": "Best-Selling Novels",
+    "clues": ["1984", "The Lord of the Rings", "The Da Vinci Code", "Harry Potter"],
+    "funFact": "These novels have captivated millions of readers and shaped modern literature."
+  },
+  {
+    "name": "Oscar-Winning Films",
+    "clues": ["Titanic", "The Godfather", "Forrest Gump", "Slumdog Millionaire"],
+    "funFact": "Winning an Oscar often propels films to a permanent place in cinema history."
+  },
+  {
+    "name": "Classic Novels",
+    "clues": ["Pride and Prejudice", "Moby Dick", "Great Expectations", "War and Peace"],
+    "funFact": "Classic novels continue to influence contemporary storytelling and literature."
+  },
+  {
+    "name": "Famous Operas",
+    "clues": ["Carmen", "La Traviata", "The Magic Flute", "Madama Butterfly"],
+    "funFact": "Opera combines music, drama, and elaborate staging to create timeless art."
+  },
+  {
+    "name": "Types of Cheese",
+    "clues": ["Brie", "Cheddar", "Gouda", "Blue"],
+    "funFact": "Cheese-making is an ancient art, with hundreds of varieties across the globe."
+  },
+  {
+    "name": "Periodic Table Elements",
+    "clues": ["Hydrogen", "Oxygen", "Gold", "Carbon"],
+    "funFact": "The periodic table organizes all known elements by their chemical properties."
+  },
+  {
+    "name": "Famous Landmarks",
+    "clues": ["Eiffel Tower", "Great Wall", "Pyramids", "Statue of Liberty"],
+    "funFact": "Landmarks serve as enduring symbols of human achievement and culture."
+  },
+  {
+    "name": "Rare Animals",
+    "clues": ["Aye-aye", "Okapi", "Saola", "Kakapo"],
+    "funFact": "Many rare animals are critically endangered and the focus of global conservation efforts."
+  },
+  {
+    "name": "Notable Scientists",
+    "clues": ["Einstein", "Newton", "Curie", "Darwin"],
+    "funFact": "These scientists transformed our understanding of nature through groundbreaking discoveries."
+  },
+  {
+    "name": "Great Authors",
+    "clues": ["Shakespeare", "Austen", "Tolstoy", "Hemingway"],
+    "funFact": "Their works have left an indelible mark on world literature and continue to be studied today."
+  },
+  {
+    "name": "Iconic Musicians",
+    "clues": ["Elvis", "Bob Dylan", "Madonna", "Freddie Mercury"],
+    "funFact": "These artists redefined popular music and influenced generations of musicians."
+  },
+  {
+    "name": "Animal Adaptations",
+    "clues": ["Camouflage", "Hibernation", "Migration", "Mimicry"],
+    "funFact": "Animals develop fascinating adaptations that allow them to thrive in diverse environments."
+  },
+  {
+    "name": "Historical Treaties",
+    "clues": ["Versailles", "Treaty of Tordesillas", "Westphalia", "Treaty of Paris"],
+    "funFact": "Treaties have redrawn borders and established the foundations of modern international law."
+  },
+  {
+    "name": "Famous Battles",
+    "clues": ["Waterloo", "Gettysburg", "Hastings", "Stalingrad"],
+    "funFact": "Key battles have often marked turning points in the course of history."
+  },
+  {
+    "name": "World Rivers",
+    "clues": ["Nile", "Amazon", "Yangtze", "Danube"],
+    "funFact": "Rivers have nurtured civilizations and continue to be vital for commerce and culture."
+  },
+  {
+    "name": "Artisanal Chocolates",
+    "clues": ["Truffle", "Single Origin", "Bean-to-Bar", "Dark"],
+    "funFact": "Artisanal chocolates emphasize quality and craftsmanship, often using ethically sourced cocoa."
+  },
+  {
+    "name": "Famous Astronomers",
+    "clues": ["Galileo", "Hubble", "Copernicus", "Kepler"],
+    "funFact": "Their observations and theories have dramatically expanded our understanding of the cosmos."
+  },
+  {
+    "name": "Major World Religions",
+    "clues": ["Christianity", "Islam", "Hinduism", "Buddhism"],
+    "funFact": "These religions have shaped the moral and cultural frameworks of billions of people."
+  },
+  {
+    "name": "Famous Philosophers",
+    "clues": ["Plato", "Aristotle", "Confucius", "Socrates"],
+    "funFact": "Philosophers have pondered life’s fundamental questions for thousands of years."
+  },
+  {
+    "name": "Historical Documents",
+    "clues": ["Magna Carta", "Declaration of Independence", "Constitution", "Emancipation Proclamation"],
+    "funFact": "These documents laid the groundwork for modern democracy and human rights."
+  },
+  {
+    "name": "Popular Video Games",
+    "clues": ["Minecraft", "Fortnite", "Zelda", "Overwatch"],
+    "funFact": "Video games have evolved into immersive worlds enjoyed by millions worldwide."
+  },
+  {
+    "name": "Iconic Cars",
+    "clues": ["Mustang", "Corvette", "Beetle", "Civic"],
+    "funFact": "Iconic cars capture the spirit of their eras and continue to influence automotive design."
+  },
+  {
+    "name": "Famous Architects",
+    "clues": ["Gaudí", "Wright", "Le Corbusier", "Foster"],
+    "funFact": "Innovative architects design structures that become landmarks in their cities."
+  },
+  {
+    "name": "World Currencies",
+    "clues": ["Dollar", "Euro", "Yen", "Pound"],
+    "funFact": "Currencies reflect the economic identity and historical evolution of nations."
+  },
+  {
+    "name": "Famous Sculptures",
+    "clues": ["David", "The Thinker", "Venus de Milo", "Moai"],
+    "funFact": "Sculptures capture artistic expression in three dimensions and often become cultural icons."
+  },
+  {
+    "name": "Innovative Startups",
+    "clues": ["Uber", "Airbnb", "SpaceX", "Stripe"],
+    "funFact": "Startups drive technological and business innovation, reshaping traditional industries."
+  },
+  {
+    "name": "Prestigious Universities",
+    "clues": ["Harvard", "Oxford", "MIT", "Stanford"],
+    "funFact": "These institutions are renowned for academic excellence and influential research."
+  },
+  {
+    "name": "Mythological Figures",
+    "clues": ["Zeus", "Hera", "Odin", "Anansi"],
+    "funFact": "Mythological figures embody timeless stories and values from ancient cultures."
+  },
+  {
+    "name": "Popular Mobile Apps",
+    "clues": ["Instagram", "Snapchat", "WhatsApp", "TikTok"],
+    "funFact": "Mobile apps have revolutionized the way we communicate, shop, and share our lives."
+  },
+  {
+    "name": "Famous Sports Coaches",
+    "clues": ["Belichick", "Phil Jackson", "Ferguson", "Summitt"],
+    "funFact": "Outstanding coaches inspire their teams and leave lasting legacies in sports history."
+  },
+  {
+    "name": "Innovative Gadgets",
+    "clues": ["Smartphone", "Drone", "VR Headset", "Smartwatch"],
+    "funFact": "Cutting-edge gadgets continue to redefine our interaction with technology."
+  },
+  {
+    "name": "Weather Phenomena",
+    "clues": ["Tornado", "Hurricane", "Blizzard", "Heatwave"],
+    "funFact": "Extreme weather events demonstrate the raw power and unpredictability of nature."
+  },
+  {
+    "name": "Ancient Wonders",
+    "clues": ["Great Pyramid", "Hanging Gardens", "Colossus", "Lighthouse of Alexandria"],
+    "funFact": "The ancient wonders were marvels of engineering that still captivate our imaginations."
+  },
+  {
+    "name": "Famous Composers",
+    "clues": ["Mozart", "Beethoven", "Bach", "Chopin"],
+    "funFact": "Their timeless compositions continue to influence and inspire musicians around the world."
+  },
+  {
+    "name": "Popular Podcasts",
+    "clues": ["Serial", "The Daily", "Radiolab", "99% Invisible"],
+    "funFact": "Podcasts have emerged as a popular medium for in-depth storytelling and news."
   }
     ]
   }
