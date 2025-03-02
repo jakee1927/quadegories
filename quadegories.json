@@ -1,67 +1,67 @@
 {
     "quadegories": [
       {
-        "name": "fried foods",
+        "name": "Fried Foods",
         "clues": ["Egg roll", "Savory patty", "Clam cake", "Pommes dauphin"],
         "funFact": "The <b>clam cake</b> was invented at Aunt Carrie's, an award-winning Rhode Island restaurant, when Aunt Carrie added fresh clams to corn fritters."
       },
       {
-        "name": "national parks",
+        "name": "National Parks",
         "clues": ["Arches", "Crater Lake", "Congaree", "Theodore Roosevelt"],
         "funFact": "<b>Congaree</b> National Park, located in South Carolina, is home to enormous loblolly pines and several cyprus trees well over five hundred years old."
       },
       {
-        "name": "died at the alamo",
+        "name": "Died at the Alamo",
         "clues": ["Davey Crockett", "Jim Bowie", "James Bonham", "Micajah Autry"],
         "funFact": "<b>James Bonham</b>, at age 29, is believed to have died while manning one of the canons in the interior of the Alamo chapel."
       },
       {
-        "name": "dances",
+        "name": "Dances",
         "clues": ["Tango", "Pop, Lock, and Drop It", "Batusie", "The Nutbush"],
         "funFact": "The Batusie was a groovy dance invented for the Batman television series."
       },
       {
-        "name": "movies about teachers",
+        "name": "Movies About Teachers",
         "clues": ["To Sir with Love", "Good Bye, Mr. Chips", "Children of a Lesser God", "The Browning Version"],
         "funFact": "<b>Good Bye, Mr. Chips</b> was once parodied as, 'Piss Off, Mr. Chips'."
       },
       {
-        "name": "chess terms",
+        "name": "Chess Terms",
         "clues": ["Bishop", "Knight", "Board", "Fork"],
         "funFact": "Chessmen collected from the Yaktats' people in Alaska bear no resemblance to European chessmen and likely belong to a chess tradition coming from Siberia."
       },
       {
-        "name": "types of tobacco",
+        "name": "Types of Tobacco",
         "clues": ["Brightleaf", "Turkish", "Shade Grown", "Wild"],
         "funFact": "<b>Shade Grown</b> tobacco, also known as Connecticut Shade Grown Tobacco, is grown inside tents to shield it from natural sunlight."
       },
       {
-        "name": "monopoly properties",
+        "name": "Monopoly Properties",
         "clues": ["Park Place", "Baltic", "Kentucky", "Atlantic"],
         "funFact": "The three most landed on properties in the classic Monopoly game are Illinois Street, Go, and B&O Railroad."
       },
       {
-        "name": "beans",
+        "name": "Beans",
         "clues": ["Garbanzo", "Navy", "Yardlong", "Turtle"],
         "funFact": "Other beans are Lima, Mung, Moth, and Velvet."
       },
       {
-        "name": "lovers of howard hughes",
+        "name": "Lovers of Howard Hughes",
         "clues": ["Katherine Hepburn", "Betty Davis", "Yvonne De Carlo", "Linda Darnell"],
         "funFact": "Howard Hughes once became so obsessed with the 1938 film, <b>Gunga Din</b>, that he had it run on a continuous loop and watched it 150 times."
       },
       {
-        "name": "nicknames for grandparents",
+        "name": "Nicknames for Grandparents",
         "clues": ["Pee Paw", "Nonny", "Boppa", "Gumma"],
         "funFact": "33% of grandparents have been married more than once and 38% have sex at least twice a week."
       },
       {
-        "name": "jewish kings",
+        "name": "Jewish Kings",
         "clues": ["David", "Saul", "Ahab", "Asa"],
         "funFact": "Other Jewish Kings include Solomon, Aristobulus II, and Herod the Great."
       },
       {
-        "name": "volcanos",
+        "name": "Volcanos",
         "clues": ["Krakatoa", "Pelee", "Fuji", "Negra Muerta"],
         "funFact": "Volcanoes are classified as Active, Dormant, or Extinct."
       },
@@ -121,7 +121,7 @@
         "funFact": "The Honey Badger is famously fearless, taking on predators much larger than itself!"
     },
     {
-        "name": "words for kissing",
+        "name": "Words for Kissing",
         "clues": ["Smooch", "Osculate", "Peck", "Snog"],
         "funFact": "Osculate is the scientific term for kissing, derived from Latin."
     },
