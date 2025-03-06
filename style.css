@@ -72,6 +72,10 @@ p {
         box-shadow: 0 0 10px 5px rgba(255, 255, 0, 0.5); /* Back to small glow */
     }
 }
+#wordGuessingGameContainer:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
 #howToPlayWrapper {
     position: fixed;
     top: 0;
